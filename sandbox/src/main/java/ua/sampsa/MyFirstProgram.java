@@ -7,24 +7,15 @@ public class MyFirstProgram {
         hello("user");
         hello("Aleksei");
 
-        double length = 5;
-        System.out.println("The area of square with side length " + length + " = " + area(length));
+        Square s = new Square(5); // new keyword is used to create new objects
+        System.out.println("The area of square with side length " + s.l + " = " + s.area());
 
-        double a = 4;
-        double b = 5;
-        System.out.println("The area of a rectangle with a sides length " + a + " and " + b + " = " + area(a, b));
 
+        Rectangle pushkin = new Rectangle(4,5);
+        System.out.println("The area of a rectangle with a sides length " + pushkin.x + " and " + pushkin.y + " = " + pushkin.area());
     }
 
     public static void hello(String somebody){
-        System.out.println("Hello, " + somebody +"!");
-    }
-
-    public static double area(double l){
-       return l * l;
-    }
-
-    public static double area(double x, double y){
-        return x * y;
+        System.out.println("Hello, " + somebody + "!");
     }
 }
