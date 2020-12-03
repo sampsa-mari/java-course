@@ -14,7 +14,7 @@ public class PointDistanceTests {
     Point p1 = new Point(2,8);
     Point p2 = new Point(5,9);
 
-    Assert.assertEquals(Point.distance(p1,p2), 3.16,0.01);
+    Assert.assertEquals(p1.distanceTo(p2), 3.16,0.01);
   }
 
   @Test
@@ -23,13 +23,12 @@ public class PointDistanceTests {
     Point p1 = new Point(2,8);
     Point p2 = new Point(5,9);
 
-    double actualResult = Point.distance(p1, p2);
+    double actualResult = (p1.distanceTo(p2));
     double expectedResult = 3.16;
     if (actualResult != expectedResult){
       System.out.println("The calculation has to be checked!");
     }
 
   }
-
 
 }
