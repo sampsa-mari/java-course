@@ -9,19 +9,18 @@ import org.openqa.selenium.support.ui.Select;
 public class NewContact {
   private WebDriver wd;
 
-  @BeforeClass(alwaysRun = true)
+  @BeforeMethod
   public void setUp() throws Exception {
     wd = new FirefoxDriver();
     wd.get("http://localhost/addressbook/group.php");
     wd.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     login("admin", "secret");
-
   }
 
   @Test
   public void testNewContact() throws Exception {
     goToAddNewPage();
-    fillNewContactForm(new NewContactData("Vasya", "Olegovich", "Pupkin", "Rock-n-Roll", "Yandex", "Pobedy Street, 25", "014789564711", "pupkin@yandex.ru", "1", "January", "1987", "group1"));
+    fillNewContactForm(new NewContactData("Vasya", "Olegovich", "Pupkin", "Rock-n-Roll", "Yandex", "Pobedy Street, 25", "014789564711", "pupkin@yandex.ru", "1", "January", "1987"));
     submitNewContact();
     goToHomePage();
   }
@@ -71,9 +70,6 @@ public class NewContact {
     wd.findElement(By.name("byear")).click();
     wd.findElement(By.name("byear")).clear();
     wd.findElement(By.name("byear")).sendKeys(newContactData.getYearOfBirth());
-    wd.findElement(By.name("new_group")).click();
-    new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(newContactData.getGroup());
-    wd.findElement(By.xpath("(//option[@value='1'])[3]")).click();
   }
 
   private void goToAddNewPage() {
@@ -89,7 +85,7 @@ public class NewContact {
     wd.findElement(By.xpath("//input[@value='Login']")).click();
   }
 
-  @AfterClass(alwaysRun = true)
+  @AfterMethod
   public void tearDown() throws Exception {
     logout();
     wd.quit();
