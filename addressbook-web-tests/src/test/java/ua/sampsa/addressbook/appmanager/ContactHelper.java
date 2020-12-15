@@ -3,7 +3,7 @@ package ua.sampsa.addressbook.appmanager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
-import ua.sampsa.addressbook.model.GroupData;
+import ua.sampsa.addressbook.model.ContactData;
 
 
 public class ContactHelper extends HelperBase{
@@ -16,7 +16,7 @@ public class ContactHelper extends HelperBase{
     click(By.xpath("(//input[@name='submit'])[2]"));
   }
 
-  public void fillNewContactForm(GroupData.NewContactData newContactData) {
+  public void fillNewContactForm(ContactData newContactData) {
     type(By.name("firstname"), newContactData.getFirstName());
     type(By.name("middlename"),newContactData.getMiddleName());
     type(By.name("lastname"),newContactData.getLastName());
