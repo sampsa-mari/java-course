@@ -23,6 +23,15 @@ public class ContactTests extends TestBase {
   }
 
   @Test
+  public void testEditContactWithNULL(){
+    app.getContactHelper().selectContact();
+    app.getContactHelper().initContactModification();
+    app.getContactHelper().fillNewContactForm(new GroupData.NewContactData("Rick", null, "O", null, null, "M25", "77777", "olen@ua.ua", "4", "March", "1990"));
+    app.getContactHelper().updateNewContact();
+    app.getNavigationHelper().goToHomePage();
+  }
+
+  @Test
   public void testDeleteContact(){
     app.getContactHelper().selectContact();
     app.getContactHelper().initContactModification();
