@@ -5,7 +5,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 import ua.sampsa.addressbook.model.ContactData;
 
-
 public class ContactHelper extends HelperBase{
 
   public ContactHelper(WebDriver wd) {
