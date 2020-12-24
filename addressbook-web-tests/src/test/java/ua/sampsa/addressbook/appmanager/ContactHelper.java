@@ -52,4 +52,13 @@ public class ContactHelper extends HelperBase{
   public void deleteContact() {
     click(By.xpath("//*[@name='update'][@value='Delete']"));
   }
+
+  public void createContact(ContactData contact) {
+    fillNewContactForm(contact);
+    submitNewContact();
+  }
+
+  public boolean isThereAnyContact() {
+    return isElementPresent(By.name("selected[]"));
+  }
 }
