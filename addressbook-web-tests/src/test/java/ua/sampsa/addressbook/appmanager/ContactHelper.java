@@ -2,10 +2,15 @@ package ua.sampsa.addressbook.appmanager;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import ua.sampsa.addressbook.model.ContactData;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ContactHelper extends HelperBase{
+
 
   public ContactHelper(WebDriver wd) {
     super(wd);
@@ -36,13 +41,13 @@ public class ContactHelper extends HelperBase{
     type(By.name("byear"), newContactData.getYearOfBirth());
   }
 
-  public void selectContact() {
-    click(By.name("selected[]"));
+  public void selectContact(int index) {
+    wd.findElements(By.name("selected[]")).get(index).click();
 
   }
 
-  public void initContactModification() {
-    click(By.xpath("//img[@alt='Edit']"));
+  public void initContactModification(int index) {
+    wd.findElements(By.xpath("//img[@alt='Edit']")).get(index).click();
   }
 
   public void updateNewContact() {
@@ -50,7 +55,8 @@ public class ContactHelper extends HelperBase{
   }
 
   public void deleteContact() {
-    click(By.xpath("//*[@name='update'][@value='Delete']"));
+    click(By.xpath("//input[@value='Delete']"));
+    wd.switchTo().alert().accept();
   }
 
   public void createContact(ContactData contact) {
@@ -60,5 +66,30 @@ public class ContactHelper extends HelperBase{
 
   public boolean isThereAnyContact() {
     return isElementPresent(By.name("selected[]"));
+  }
+
+  public int getContactCount()  {
+    return wd.findElements(By.name("selected[]")).size();
+  }
+
+
+
+  public List<ContactData> getContactList() {
+
+    List<ContactData> contacts = new ArrayList<ContactData>(); //Create the List to fill
+
+    List<WebElement> rows = wd.findElements(By.cssSelector("tr[name='entry']"));     //Get all rows
+
+    for (WebElement row : rows ) {                                 //Get data (id, firstName, lastName) from each row
+      int id = Integer.parseInt(row.findElement(By.cssSelector("td:nth-child(1) input")).getAttribute("value"));
+      String lastName = row.findElement(By.cssSelector("td:nth-child(2)")).getText();
+      String firstName = row.findElement(By.cssSelector("td:nth-child(3)")).getText();
+
+      ContactData contactData = new ContactData(id, lastName, firstName, null,null, null,null,null,null,null,null,null);
+
+      contacts.add(contactData);
+    }
+
+    return contacts;
   }
 }

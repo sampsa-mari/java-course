@@ -4,6 +4,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import ua.sampsa.addressbook.model.GroupData;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -20,19 +21,10 @@ public class GroupTests extends TestBase {
     List<GroupData> after = app.getGroupHelper().getGroupList();
     Assert.assertEquals(after.size(), before.size() + 1);
 
-    // the following loop finds the id for newly created group, it runs in after List and set to 'max' value the highest number - because new group has the highest id
-    int max = 0;
-    for (GroupData g : after){
-      if (g.getId() > max){
-        max = g.getId();
-      }
-    }
-    newGroup.setId(max); // set found in the 'after' list  max id to expected in 'before' list newly created group
-
+    // Find in afterList max Id (which means new Group) and set it to beforeList
+    newGroup.setId(after.stream().max((o1, o2) -> Integer.compare(o1.getId(), o2.getId())).get().getId());
     before.add(newGroup);
-
     Assert.assertEquals(new HashSet<Object>(before), new HashSet<Object>(after));
-
   }
 
   @Test
@@ -54,7 +46,10 @@ public class GroupTests extends TestBase {
 
     before.remove(before.size() - 1); // remove the element, that was modified in the test to make List 'before' the same as we have before this test started
     before.add(modifiedGroup); // what we EXPECT
-    Assert.assertEquals(new HashSet<Object>(before), new HashSet<Object>(after)); //create new Sets to compare (they could be not equal in order (sorted in other way after renaming in the test), but the same in size and elements)
+    Comparator<? super GroupData> byId = (group1, group2) -> Integer.compare(group1.getId(), group2.getId());
+    before.sort(byId);
+    after.sort(byId);
+    Assert.assertEquals(before,after); //compare sorted by id Lists
 
   }
 
