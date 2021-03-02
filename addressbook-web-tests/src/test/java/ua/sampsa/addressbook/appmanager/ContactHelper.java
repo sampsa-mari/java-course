@@ -20,6 +20,10 @@ public class ContactHelper extends HelperBase{
     click(By.xpath("(//input[@name='submit'])[2]"));
   }
 
+  public void returnToHomePage() {
+    click(By.linkText("home"));
+  }
+
   public void fillNewContactForm(ContactData newContactData) {
     type(By.name("firstname"), newContactData.getFirstName());
     type(By.name("middlename"),newContactData.getMiddleName());
@@ -64,6 +68,13 @@ public class ContactHelper extends HelperBase{
     submitNewContact();
   }
 
+  public void modifyContact(ContactData modifiedContact, int index) {
+    initContactModification(index);
+    fillNewContactForm(modifiedContact);
+    updateNewContact();
+    returnToHomePage();
+  }
+
   public boolean isThereAnyContact() {
     return isElementPresent(By.name("selected[]"));
   }
@@ -71,8 +82,6 @@ public class ContactHelper extends HelperBase{
   public int getContactCount()  {
     return wd.findElements(By.name("selected[]")).size();
   }
-
-
 
   public List<ContactData> getContactList() {
 
