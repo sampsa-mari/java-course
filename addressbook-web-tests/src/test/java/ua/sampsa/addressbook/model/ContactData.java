@@ -4,51 +4,77 @@ package ua.sampsa.addressbook.model;
  * Created by Maryna Tkachuk on 15.12.20.
  */
 public class ContactData {
-    private int id;
-    private final String lastName;
-    private final String middleName;
-    private final String firstName;
-    private final String nickName;
-    private final String companyName;
-    private final String address;
-    private final String mobilePhone;
-    private final String email;
-    private final String dayOfBirth;
-    private final String monthOfBirth;
-    private final String yearOfBirth;
+    private int id = 0;
+    private String lastName;
+    private String middleName;
+    private String firstName;
+    private String nickName;
+    private String companyName;
+    private String address;
+    private String mobilePhone;
+    private String email;
+    private String dayOfBirth;
+    private String monthOfBirth;
+    private String yearOfBirth;
 
-    public ContactData(int id, String lastName, String firstName, String middleName,  String nickName, String companyName, String address, String mobilePhone, String email, String dayOfBirth, String monthOfBirth, String yearOfBirth) {
-      this.id = id;
-      this.lastName = lastName;
-      this.firstName = firstName;
-      this.middleName = middleName;
-      this.nickName = nickName;
-      this.companyName = companyName;
-      this.address = address;
-      this.mobilePhone = mobilePhone;
-      this.email = email;
-      this.dayOfBirth = dayOfBirth;
-      this.monthOfBirth = monthOfBirth;
-      this.yearOfBirth = yearOfBirth;
-    }
-
-  public ContactData(String lastName, String firstName, String middleName, String nickName, String companyName, String address, String mobilePhone, String email, String dayOfBirth, String monthOfBirth, String yearOfBirth) {
-    this.id = 0;
-    this.lastName = lastName;
-    this.firstName = firstName;
-    this.middleName = middleName;
-    this.nickName = nickName;
-    this.companyName = companyName;
-    this.address = address;
-    this.mobilePhone = mobilePhone;
-    this.email = email;
-    this.dayOfBirth = dayOfBirth;
-    this.monthOfBirth = monthOfBirth;
-    this.yearOfBirth = yearOfBirth;
+  public ContactData withId(int id) {
+    this.id = id;
+    return this;
   }
 
-  public void setId(int id) {
-    this.id = id;
+  public ContactData withLastName(String lastName) {
+    this.lastName = lastName;
+    return this;
+  }
+
+  public ContactData withMiddleName(String middleName) {
+    this.middleName = middleName;
+    return this;
+  }
+
+  public ContactData withFirstName(String firstName) {
+    this.firstName = firstName;
+    return this;
+  }
+
+  public ContactData withNickName(String nickName) {
+    this.nickName = nickName;
+    return this;
+  }
+
+  public ContactData withCompanyName(String companyName) {
+    this.companyName = companyName;
+    return this;
+  }
+
+  public ContactData withAddress(String address) {
+    this.address = address;
+    return this;
+  }
+
+  public ContactData withMobilePhone(String mobilePhone) {
+    this.mobilePhone = mobilePhone;
+    return this;
+  }
+
+  public ContactData withEmail(String email) {
+    this.email = email;
+    return this;
+  }
+
+  public ContactData withDayOfBirth(String dayOfBirth) {
+    this.dayOfBirth = dayOfBirth;
+    return this;
+  }
+
+  public ContactData withMonthOfBirth(String monthOfBirth) {
+    this.monthOfBirth = monthOfBirth;
+    return this;
+  }
+
+  public ContactData withYearOfBirth(String yearOfBirth) {
+    this.yearOfBirth = yearOfBirth;
+    return this;
   }
 
   public int getId() { return id; }

@@ -16,29 +16,30 @@ public class GroupTests extends TestBase {
   public void ensurePreconditions_atLeastOneGroupIsPresent(){
     app.goTo().groupPage();
     if(app.group().list().size() == 0){
-      app.group().create(new GroupData("newGroupsName", "newGroupsHeader", "newGroupsFooter"));
+      app.group().create(new GroupData().withName("newGroupsName").withHeader( "newGroupsHeader").withFooter( "newGroupsFooter"));
     }
   }
 
   @Test(enabled = true)
   public void testGroupCreation() throws Exception {
     List<GroupData> before = app.group().list();
-    GroupData newGroup = new GroupData("newGroupsName", "newGroupsHeader", "newGroupsFooter");
+    GroupData newGroup = new GroupData().withName("newGroupsName").withHeader( "newGroupsHeader").withFooter( "newGroupsFooter");
     int index = before.size() + 1;
     app.group().create(newGroup);
     List<GroupData> after = app.group().list();
     Assert.assertEquals(after.size(), index);
 
-    newGroup.setId(after.stream().max((o1, o2) -> Integer.compare(o1.getId(), o2.getId())).get().getId()); // Find in afterList max Id (which means new Group) and set it to beforeList
+    newGroup.withId(after.stream().max((o1, o2) -> Integer.compare(o1.getId(), o2.getId())).get().getId()); // Find in afterList max Id (which means new Group) and set it to beforeList
     before.add(newGroup);
     Assert.assertEquals(new HashSet<Object>(before), new HashSet<Object>(after));
   }
 
-  @Test(enabled = true )
+  @Test(enabled = true)
   public void testGroupModification(){
     List<GroupData> before = app.group().list();
     int index = before.size() - 1;
-    GroupData modifiedGroup = new GroupData(before.get(index).getId(),"GroupRename", "HeaderRename", "FooterRename");
+    GroupData modifiedGroup = new GroupData()
+            .withId(before.get(index).getId()).withName("GroupRename").withHeader("HeaderRename").withFooter("FooterRename");
     app.group().modify(index, modifiedGroup);
     List<GroupData> after = app.group().list();
     Assert.assertEquals(after.size(), before.size());

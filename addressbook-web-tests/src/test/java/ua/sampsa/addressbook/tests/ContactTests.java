@@ -14,7 +14,18 @@ public class ContactTests extends TestBase {
   public void ensurePreconditions_atLeastOneContactIsPresent(){
     if(app.contact().list().size() == 0){
       app.goTo().addNewPage();
-      app.contact().create(new ContactData("Vasya", "Olegovich", "Pupkin", "Rock-n-Roll", "Yandex", "Pobedy Street, 25", "014789564711", "pupkin@yandex.ru", "1", "January", "1987"));
+      app.contact().create(new ContactData()
+              .withFirstName("Vasya")
+              .withMiddleName("Olegovich")
+              .withLastName("Pupkin")
+              .withNickName("Rock-n-Roll")
+              .withCompanyName("Yandex")
+              .withAddress("Pobedy Street, 25")
+              .withMobilePhone("014789564711")
+              .withEmail("pupkin@yandex.ru")
+              .withDayOfBirth("1")
+              .withMonthOfBirth( "January")
+              .withYearOfBirth("1987"));
       app.contact().returnToHomePage();
     }
   }
@@ -23,15 +34,25 @@ public class ContactTests extends TestBase {
   public void testNewContact() throws Exception {
     List<ContactData> beforeNewContactAdded = app.contact().list();
     app.goTo().addNewPage();
-    ContactData newContact = new ContactData("Vasya", "Olegovich", "Pupkin", "Rock-n-Roll", "Yandex", "Pobedy Street, 25", "014789564711", "pupkin@yandex.ru", "1", "January", "1987");
+    ContactData newContact = new ContactData()
+            .withFirstName("Vasya")
+            .withMiddleName("Olegovich")
+            .withLastName("Pupkin")
+            .withNickName("Rock-n-Roll")
+            .withCompanyName("Yandex")
+            .withAddress("Pobedy Street, 25")
+            .withMobilePhone("014789564711")
+            .withEmail("pupkin@yandex.ru")
+            .withDayOfBirth("1")
+            .withMonthOfBirth( "January")
+            .withYearOfBirth("1987");
     app.contact().create(newContact);
     app.contact().returnToHomePage();
     List<ContactData> afterNewContactAdded = app.contact().list();
 //    System.out.println("before creation - " + beforeNewContactAdded.size() + "; after - " + afterNewContactAdded.size());
     Assert.assertEquals(afterNewContactAdded.size(), beforeNewContactAdded.size() + 1);
-
     // Find in afterList max Id (which means new contact) and set it to beforeList
-    newContact.setId(afterNewContactAdded.stream().max((o1, o2) -> Integer.compare(o1.getId(), o2.getId())).get().getId());
+    newContact.withId(afterNewContactAdded.stream().max((o1, o2) -> Integer.compare(o1.getId(), o2.getId())).get().getId());
     beforeNewContactAdded.add(newContact);
     Assert.assertEquals(new HashSet<Object>(beforeNewContactAdded), new HashSet<Object>(afterNewContactAdded));
   }
@@ -39,7 +60,19 @@ public class ContactTests extends TestBase {
   @Test(enabled = true)
   public void testEditContact(){
     List<ContactData> beforeContactModification = app.contact().list();
-    ContactData modifiedContact = new ContactData(beforeContactModification.get(beforeContactModification.size() - 1).getId(), "test1", "test1", "P", "ohne", "mzilla", "MinskerStreet, 25", "0121212121211", "olen@yandex.ru", "3", "March", "1997");
+    ContactData modifiedContact = new ContactData()
+            .withId(beforeContactModification.get(beforeContactModification.size() - 1).getId())
+            .withFirstName("test1")
+            .withMiddleName("test1")
+            .withLastName("P")
+            .withNickName("ohne")
+            .withCompanyName("mzilla")
+            .withAddress("MinskerStreet, 25")
+            .withMobilePhone("0121212121211")
+            .withEmail( "olen@yandex.ru")
+            .withDayOfBirth("3")
+            .withMonthOfBirth("March")
+            .withYearOfBirth("1997");
     int index = beforeContactModification.size() - 1;
     app.contact().modify(modifiedContact, index);
     List<ContactData> afterContactModification = app.contact().list();
@@ -54,11 +87,19 @@ public class ContactTests extends TestBase {
     Assert.assertEquals(beforeContactModification, afterContactModification);
   }
 
-
   @Test(enabled = true)
   public void testEditContactWithNULL() {
     List<ContactData> beforeContactModification = app.contact().list();
-    ContactData modifiedContact = new ContactData(beforeContactModification.get(beforeContactModification.size() - 1).getId(), "Rick", null, "O", null, null, "M25", "77777", "olen@ua.ua", "4", "March", "1990");
+    ContactData modifiedContact = new ContactData()
+            .withId(beforeContactModification.get(beforeContactModification.size() - 1).getId())
+            .withLastName("Olennikoff")
+            .withFirstName("Rick")
+            .withCompanyName("Cisco")
+            .withMobilePhone("0799-77777777")
+            .withEmail("olen@ua.ua")
+            .withDayOfBirth("12")
+            .withMonthOfBirth("March")
+            .withYearOfBirth("1978");
     int index = beforeContactModification.size() - 1;
     app.contact().modify(modifiedContact, index);
     List<ContactData> afterContactModification = app.contact().list();
@@ -67,7 +108,7 @@ public class ContactTests extends TestBase {
 
     // Copy modified row with NULLs from afterList
     ContactData buffer = afterContactModification.get(index);
-    ContactData newModifiedNULLContact = new ContactData(buffer.getId(), buffer.getLastName(), buffer.getFirstName(), null,null,null,null,null,null,null,null,null );
+    ContactData newModifiedNULLContact = new ContactData().withId(buffer.getId()).withLastName(buffer.getLastName()).withFirstName(buffer.getFirstName());
 
     beforeContactModification.remove(index);
     // add modified row with NULLs to before for correct comparing
