@@ -9,25 +9,24 @@ import java.util.HashSet;
 import java.util.List;
 
 public class ContactTests extends TestBase {
+
   @BeforeMethod
   public void ensurePreconditions_atLeastOneContactIsPresent(){
-    if(! app.getContactHelper().isThereAnyContact()){
-      app.getNavigationHelper().goToAddNewPage();
-      app.getContactHelper().createContact(new ContactData("Vasya", "Olegovich", "Pupkin", "Rock-n-Roll", "Yandex", "Pobedy Street, 25", "014789564711", "pupkin@yandex.ru", "1", "January", "1987"));
-      app.getContactHelper().returnToHomePage();
+    if(app.contact().list().size() == 0){
+      app.goTo().addNewPage();
+      app.contact().create(new ContactData("Vasya", "Olegovich", "Pupkin", "Rock-n-Roll", "Yandex", "Pobedy Street, 25", "014789564711", "pupkin@yandex.ru", "1", "January", "1987"));
+      app.contact().returnToHomePage();
     }
   }
 
   @Test(enabled = true)
   public void testNewContact() throws Exception {
-    List<ContactData> beforeNewContactAdded = app.getContactHelper().getContactList();
-    app.getNavigationHelper().goToAddNewPage();
-
+    List<ContactData> beforeNewContactAdded = app.contact().list();
+    app.goTo().addNewPage();
     ContactData newContact = new ContactData("Vasya", "Olegovich", "Pupkin", "Rock-n-Roll", "Yandex", "Pobedy Street, 25", "014789564711", "pupkin@yandex.ru", "1", "January", "1987");
-    app.getContactHelper().createContact(newContact);
-    app.getContactHelper().returnToHomePage();
-
-    List<ContactData> afterNewContactAdded = app.getContactHelper().getContactList();
+    app.contact().create(newContact);
+    app.contact().returnToHomePage();
+    List<ContactData> afterNewContactAdded = app.contact().list();
 //    System.out.println("before creation - " + beforeNewContactAdded.size() + "; after - " + afterNewContactAdded.size());
     Assert.assertEquals(afterNewContactAdded.size(), beforeNewContactAdded.size() + 1);
 
@@ -37,15 +36,13 @@ public class ContactTests extends TestBase {
     Assert.assertEquals(new HashSet<Object>(beforeNewContactAdded), new HashSet<Object>(afterNewContactAdded));
   }
 
-  @Test
+  @Test(enabled = true)
   public void testEditContact(){
-    List<ContactData> beforeContactModification = app.getContactHelper().getContactList();
+    List<ContactData> beforeContactModification = app.contact().list();
     ContactData modifiedContact = new ContactData(beforeContactModification.get(beforeContactModification.size() - 1).getId(), "test1", "test1", "P", "ohne", "mzilla", "MinskerStreet, 25", "0121212121211", "olen@yandex.ru", "3", "March", "1997");
     int index = beforeContactModification.size() - 1;
-
-    app.getContactHelper().modifyContact(modifiedContact, index);
-
-    List<ContactData> afterContactModification = app.getContactHelper().getContactList();
+    app.contact().modify(modifiedContact, index);
+    List<ContactData> afterContactModification = app.contact().list();
     Assert.assertEquals(afterContactModification.size(), beforeContactModification.size());
 
     beforeContactModification.remove(index);
@@ -58,15 +55,13 @@ public class ContactTests extends TestBase {
   }
 
 
-  @Test
+  @Test(enabled = true)
   public void testEditContactWithNULL() {
-    List<ContactData> beforeContactModification = app.getContactHelper().getContactList();
+    List<ContactData> beforeContactModification = app.contact().list();
     ContactData modifiedContact = new ContactData(beforeContactModification.get(beforeContactModification.size() - 1).getId(), "Rick", null, "O", null, null, "M25", "77777", "olen@ua.ua", "4", "March", "1990");
-
     int index = beforeContactModification.size() - 1;
-    app.getContactHelper().modifyContact(modifiedContact, index);
-
-    List<ContactData> afterContactModification = app.getContactHelper().getContactList();
+    app.contact().modify(modifiedContact, index);
+    List<ContactData> afterContactModification = app.contact().list();
    // System.out.println("before modificaton - " + beforeContactModification.size() + "; after - " + afterContactModification.size());
     Assert.assertEquals(afterContactModification.size(), beforeContactModification.size());
 
@@ -84,19 +79,17 @@ public class ContactTests extends TestBase {
     Assert.assertEquals(beforeContactModification, afterContactModification);
   }
 
-  @Test
+  @Test(enabled = true)
   public void testDeleteContact(){
-    List<ContactData> beforeDeletion = app.getContactHelper().getContactList();
-
-    app.getContactHelper().selectContact(beforeDeletion.size() - 1); //select last contact (click on checkbox)
-    app.getContactHelper().deleteContact();
-    app.getContactHelper().returnToHomePage();
-
-    List<ContactData> afterDeletion = app.getContactHelper().getContactList();
+    List<ContactData> beforeDeletion = app.contact().list();
+    int index = beforeDeletion.size() - 1;
+    app.contact().delete(index);
+    List<ContactData> afterDeletion = app.contact().list();
  //   System.out.println("before deletion - " + beforeDeletion.size() + "; after deletion - " + afterDeletion.size());
-    Assert.assertEquals(afterDeletion.size(), beforeDeletion.size() - 1);
+    Assert.assertEquals(afterDeletion.size(), index);
 
-    beforeDeletion.remove(beforeDeletion.size() - 1); // to make sure, that we deleted expected contact, we delete it now forcibly and check if the Lists are equal
+    beforeDeletion.remove(index); // to make sure, that we deleted expected contact, we delete it now forcibly and check if the Lists are equal
     Assert.assertEquals(beforeDeletion, afterDeletion); // compare the original list 'before' with the resulting 'after'
   }
+
 }

@@ -14,34 +14,33 @@ public class GroupTests extends TestBase {
 
   @BeforeMethod
   public void ensurePreconditions_atLeastOneGroupIsPresent(){
-    app.getNavigationHelper().goToGroupPage();
-    if(! app.getGroupHelper().isThereAGroup()){
-      app.getGroupHelper().createGroup(new GroupData("newGroupsName", "newGroupsHeader", "newGroupsFooter"));
+    app.goTo().groupPage();
+    if(app.group().list().size() == 0){
+      app.group().create(new GroupData("newGroupsName", "newGroupsHeader", "newGroupsFooter"));
     }
   }
 
-  @Test
+  @Test(enabled = true)
   public void testGroupCreation() throws Exception {
-    List<GroupData> before = app.getGroupHelper().getGroupList();
+    List<GroupData> before = app.group().list();
     GroupData newGroup = new GroupData("newGroupsName", "newGroupsHeader", "newGroupsFooter");
     int index = before.size() + 1;
-    app.getGroupHelper().createGroup(newGroup);
-    List<GroupData> after = app.getGroupHelper().getGroupList();
+    app.group().create(newGroup);
+    List<GroupData> after = app.group().list();
     Assert.assertEquals(after.size(), index);
+
     newGroup.setId(after.stream().max((o1, o2) -> Integer.compare(o1.getId(), o2.getId())).get().getId()); // Find in afterList max Id (which means new Group) and set it to beforeList
     before.add(newGroup);
     Assert.assertEquals(new HashSet<Object>(before), new HashSet<Object>(after));
   }
 
-  @Test
+  @Test(enabled = true )
   public void testGroupModification(){
-    List<GroupData> before = app.getGroupHelper().getGroupList();
+    List<GroupData> before = app.group().list();
     int index = before.size() - 1;
     GroupData modifiedGroup = new GroupData(before.get(index).getId(),"GroupRename", "HeaderRename", "FooterRename");
-
-    app.getGroupHelper().modifyGroup(index, modifiedGroup);
-
-    List<GroupData> after = app.getGroupHelper().getGroupList();
+    app.group().modify(index, modifiedGroup);
+    List<GroupData> after = app.group().list();
     Assert.assertEquals(after.size(), before.size());
 
     before.remove(index); // remove the element, that was modified in the test to make List 'before' the same as we have before this test started
@@ -50,20 +49,14 @@ public class GroupTests extends TestBase {
     before.sort(byId);
     after.sort(byId);
     Assert.assertEquals(before,after); //compare sorted by id Lists
-
   }
 
-  @Test
+  @Test(enabled = true)
   public void testGroupDeletion() throws Exception {
-    List<GroupData> before = app.getGroupHelper().getGroupList();
+    List<GroupData> before = app.group().list();
     int index = before.size() - 1;
-
-    app.getGroupHelper().selectGroup(index); //select the last group from the List
-    app.getGroupHelper().deleteSelectedGroups();
-    app.getGroupHelper().returnToGroupPage();
-
-    List<GroupData> after = app.getGroupHelper().getGroupList();
-
+    app.group().delete(index);
+    List<GroupData> after = app.group().list();
     Assert.assertEquals(after.size(), index);
 
     before.remove(index); // remove the same element from old list (before our deletion) to make lists equal, because list 'after' is smaller

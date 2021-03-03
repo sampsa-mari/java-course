@@ -45,7 +45,7 @@ public class ContactHelper extends HelperBase{
     type(By.name("byear"), newContactData.getYearOfBirth());
   }
 
-  public void selectContact(int index) {
+  public void select(int index) {
     wd.findElements(By.name("selected[]")).get(index).click();
 
   }
@@ -58,20 +58,26 @@ public class ContactHelper extends HelperBase{
     click(By.xpath("//*[@name='update'][@value='Update']"));
   }
 
-  public void deleteContact() {
+  public void delete() {
     click(By.xpath("//input[@value='Delete']"));
     wd.switchTo().alert().accept();
   }
 
-  public void createContact(ContactData contact) {
+  public void create(ContactData contact) {
     fillNewContactForm(contact);
     submitNewContact();
   }
 
-  public void modifyContact(ContactData modifiedContact, int index) {
+  public void modify(ContactData modifiedContact, int index) {
     initContactModification(index);
     fillNewContactForm(modifiedContact);
     updateNewContact();
+    returnToHomePage();
+  }
+
+  public void delete(int index) {
+    select(index);
+    delete();
     returnToHomePage();
   }
 
@@ -83,7 +89,7 @@ public class ContactHelper extends HelperBase{
     return wd.findElements(By.name("selected[]")).size();
   }
 
-  public List<ContactData> getContactList() {
+  public List<ContactData> list() {
 
     List<ContactData> contacts = new ArrayList<ContactData>(); //Create the List to fill
 
