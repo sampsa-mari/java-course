@@ -76,18 +76,21 @@ public class ContactHelper extends HelperBase{
   public void create(ContactData contact) {
     fillNewContactForm(contact);
     submitNewContact();
+    contactsCache = null;
   }
 
   public void modifyById(ContactData modifiedContact) {
     initContactModificationById(modifiedContact.getId());
     fillNewContactForm(modifiedContact);
     updateNewContact();
+    contactsCache = null;
     returnToHomePage();
   }
 
   public void deleteById(ContactData randomDeletedContact) {
     selectById(randomDeletedContact.getId());
     delete();
+    contactsCache = null;
     returnToHomePage();
   }
 
@@ -99,28 +102,32 @@ public class ContactHelper extends HelperBase{
     return wd.findElements(By.name("selected[]")).size();
   }
 
-  public List<ContactData> list() {
-    List<ContactData> contacts = new ArrayList<ContactData>(); //Create the List to fill
-    List<WebElement> rows = wd.findElements(By.cssSelector("tr[name='entry']"));     //Get all rows
-    for (WebElement row : rows ) {                                 //Get data (id, firstName, lastName) from each row
-      int id = Integer.parseInt(row.findElement(By.cssSelector("td:nth-child(1) input")).getAttribute("value"));
-      String lastName = row.findElement(By.cssSelector("td:nth-child(2)")).getText();
-      String firstName = row.findElement(By.cssSelector("td:nth-child(3)")).getText();
-      contacts.add(new ContactData().withId(id).withLastName(lastName).withFirstName(firstName));
-    }
-    return contacts;
-  }
+//  public List<ContactData> list() {
+//    List<ContactData> contacts = new ArrayList<ContactData>(); //Create the List to fill
+//    List<WebElement> rows = wd.findElements(By.cssSelector("tr[name='entry']"));     //Get all rows
+//    for (WebElement row : rows ) {                                 //Get data (id, firstName, lastName) from each row
+//      int id = Integer.parseInt(row.findElement(By.cssSelector("td:nth-child(1) input")).getAttribute("value"));
+//      String lastName = row.findElement(By.cssSelector("td:nth-child(2)")).getText();
+//      String firstName = row.findElement(By.cssSelector("td:nth-child(3)")).getText();
+//      contacts.add(new ContactData().withId(id).withLastName(lastName).withFirstName(firstName));
+//    }
+//    return contacts;
+//  }
+  private Contacts contactsCache = null;
 
   public Contacts all() {
-    Contacts contacts = new Contacts(); //Create the Set to fill (object that creating in Contacts class)
+    if (contactsCache != null){
+      return new Contacts(contactsCache);
+    }
+    contactsCache = new Contacts(); //Create the Set to fill (object that creating in Contacts class)
     List<WebElement> rows = wd.findElements(By.cssSelector("tr[name='entry']"));     //Get all rows
     for (WebElement row : rows ) {                                 //Get data (id, firstName, lastName) from each row
       int id = Integer.parseInt(row.findElement(By.cssSelector("td:nth-child(1) input")).getAttribute("value"));
       String lastName = row.findElement(By.cssSelector("td:nth-child(2)")).getText();
       String firstName = row.findElement(By.cssSelector("td:nth-child(3)")).getText();
-      contacts.add(new ContactData().withId(id).withLastName(lastName).withFirstName(firstName));
+      contactsCache.add(new ContactData().withId(id).withLastName(lastName).withFirstName(firstName));
     }
-    return contacts;
+    return new Contacts(contactsCache);
   }
 
 }
