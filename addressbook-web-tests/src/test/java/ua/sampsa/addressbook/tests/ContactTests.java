@@ -48,9 +48,32 @@ public class ContactTests extends TestBase {
             .withYearOfBirth("1987");
     app.contact().create(newContact);
     app.contact().returnToHomePage();
+    assertThat(app.contact().count(), equalTo(beforeNewContactAdded.size() + 1));
     Contacts afterNewContactAdded = app.contact().all();
-    assertThat(afterNewContactAdded.size(), equalTo(beforeNewContactAdded.size() + 1));
     assertThat(afterNewContactAdded, equalTo(beforeNewContactAdded.withAdded(newContact.withId(afterNewContactAdded.stream().mapToInt((c) -> c.getId()).max().getAsInt()))));
+  }
+
+  @Test(enabled = true)
+  public void testBadNameContact() throws Exception {
+    Contacts beforeNewContactAdded = app.contact().all();
+    app.goTo().addNewPage();
+    ContactData newContact = new ContactData()
+            .withFirstName("Vasya1'")
+            .withMiddleName("Olegovich")
+            .withLastName("Pupkin")
+            .withNickName("Rock-n-Roll")
+            .withCompanyName("Yandex")
+            .withAddress("Pobedy Street, 25")
+            .withMobilePhone("014789564711")
+            .withEmail("pupkin@yandex.ru")
+            .withDayOfBirth("1")
+            .withMonthOfBirth( "January")
+            .withYearOfBirth("1987");
+    app.contact().create(newContact);
+    app.contact().returnToHomePage();
+    assertThat(app.contact().count(), equalTo(beforeNewContactAdded.size()));
+    Contacts afterNewContactAdded = app.contact().all();
+    assertThat(afterNewContactAdded, equalTo(beforeNewContactAdded));
   }
 
   @Test(enabled = true)
@@ -72,8 +95,8 @@ public class ContactTests extends TestBase {
             .withYearOfBirth("1997");
 
     app.contact().modifyById(modifiedContact);
+    assertThat(app.contact().count(), equalTo(beforeContactModification.size()));
     Contacts afterContactModification = app.contact().all();
-    assertThat(afterContactModification.size(), equalTo(beforeContactModification.size()));
     assertThat(afterContactModification, equalTo(beforeContactModification.without(randomEditedContact).withAdded(modifiedContact)));
   }
 
@@ -82,8 +105,8 @@ public class ContactTests extends TestBase {
     Contacts beforeDeletion = app.contact().all();
     ContactData randomDeletedContact = beforeDeletion.iterator().next(); // 'iterator()' iterates over the elements in Set sequentially and 'next()' returns random element from Set
     app.contact().deleteById(randomDeletedContact);
+    assertThat(app.contact().count(), equalTo(beforeDeletion.size() - 1));
     Contacts afterDeletion = app.contact().all();
-    assertThat(afterDeletion.size(), equalTo(beforeDeletion.size() - 1));
     assertThat(afterDeletion, equalTo(beforeDeletion.without(randomDeletedContact)));
   }
 }
