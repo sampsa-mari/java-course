@@ -7,7 +7,8 @@ repositories {
 dependencies{
     compile 'org.testng:testng:7.0.0'
     compile 'org.seleniumhq.selenium:selenium-java:3.141.59'
-    compile 'org.slf4j:jcl104-over-slf4j:1.5.11'}
+    compile 'org.hamcrest:java-hamcrest:2.0.0.0'
+}
 test {
     useTestNG()
 }

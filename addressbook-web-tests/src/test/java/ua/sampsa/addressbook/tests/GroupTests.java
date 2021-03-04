@@ -1,11 +1,12 @@
 package ua.sampsa.addressbook.tests;
 
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ua.sampsa.addressbook.model.GroupData;
+import ua.sampsa.addressbook.model.Groups;
 
-import java.util.Set;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 
 public class GroupTests extends TestBase {
@@ -20,41 +21,32 @@ public class GroupTests extends TestBase {
 
   @Test(enabled = true)
   public void testGroupCreation() throws Exception {
-    Set<GroupData> before = app.group().all();
+    Groups before = app.group().all();
     GroupData newGroup = new GroupData().withName("newGroupsName").withHeader( "newGroupsHeader").withFooter( "newGroupsFooter");
-    int index = before.size() + 1;
     app.group().create(newGroup);
-    Set<GroupData> after = app.group().all();
-    Assert.assertEquals(after.size(), index);
-
-    newGroup.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt()); // get Set 'after' with all Id`s, make stream from it, create stream of Id`s (mapToInt) and search max value
-    before.add(newGroup);
-    Assert.assertEquals(before, after);
+    Groups after = app.group().all();
+    assertThat(after.size(), equalTo(before.size() + 1));
+    assertThat(after, equalTo(before.withAdded(newGroup.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt()))));  // get Set 'after' with all Id`s, make stream from it, create stream of Id`s (mapToInt) and search max value
   }
 
   @Test(enabled = true)
   public void testGroupModification(){
-    Set<GroupData> before = app.group().all();  // Create Set of existing groups
+    Groups before = app.group().all();
     GroupData randomEditedGroup = before.iterator().next(); // select from Set random group that will be modified. 'iterator()' iterates over the elements in Set sequentially and 'next()' returns random element from Set
     GroupData modifiedGroup = new GroupData().withId(randomEditedGroup.getId()).withName("GroupRename").withHeader("HeaderRename").withFooter("FooterRename"); // take id from object above
     app.group().modify(modifiedGroup);
-    Set<GroupData> after = app.group().all();
-    Assert.assertEquals(after.size(), before.size());
-
-    before.remove(randomEditedGroup); // remove the element, that was modified in the test to make Set 'before' the same as we have before this test started
-    before.add(modifiedGroup); // what we EXPECT
-    Assert.assertEquals(before,after); //compare sorted by id Lists
+    Groups after = app.group().all();
+    assertThat(after.size(), equalTo( before.size()));
+    assertThat(after, equalTo (before.without(randomEditedGroup).withAdded(modifiedGroup)));
   }
 
   @Test(enabled = true)
   public void testGroupDeletion() throws Exception {
-    Set<GroupData> before = app.group().all();
-    GroupData randomDeletedGroup = before.iterator().next(); // 'iterator()' iterates over the elements in Set sequentially and 'next()' returns random element from Set
+    Groups before = app.group().all();
+    GroupData randomDeletedGroup = before.iterator().next();
     app.group().delete(randomDeletedGroup);
-    Set<GroupData> after = app.group().all();
-    Assert.assertEquals(after.size(), before.size() - 1);
-
-    before.remove(randomDeletedGroup); // remove the same element from old list (before our deletion) to make lists equal, because list 'after' is smaller
-    Assert.assertEquals(before, after); // compare lists
+    Groups after = app.group().all();
+    assertThat(after.size(), equalTo(before.size() - 1));
+    assertThat(after, equalTo (before.without(randomDeletedGroup)));
   }
 }

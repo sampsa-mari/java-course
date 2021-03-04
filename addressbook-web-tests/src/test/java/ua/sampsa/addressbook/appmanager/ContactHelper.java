@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import ua.sampsa.addressbook.model.ContactData;
+import ua.sampsa.addressbook.model.Contacts;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -110,8 +111,8 @@ public class ContactHelper extends HelperBase{
     return contacts;
   }
 
-  public Set<ContactData> all() {
-    Set<ContactData> contacts = new HashSet<ContactData>(); //Create the Set to fill
+  public Contacts all() {
+    Contacts contacts = new Contacts(); //Create the Set to fill (object that creating in Contacts class)
     List<WebElement> rows = wd.findElements(By.cssSelector("tr[name='entry']"));     //Get all rows
     for (WebElement row : rows ) {                                 //Get data (id, firstName, lastName) from each row
       int id = Integer.parseInt(row.findElement(By.cssSelector("td:nth-child(1) input")).getAttribute("value"));
