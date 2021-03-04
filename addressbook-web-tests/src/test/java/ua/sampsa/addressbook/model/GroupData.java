@@ -41,7 +41,6 @@ public class GroupData {
 
   public String getFooter() { return footer; }
 
-
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;

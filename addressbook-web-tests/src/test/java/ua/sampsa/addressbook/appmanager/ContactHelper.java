@@ -7,7 +7,9 @@ import org.openqa.selenium.support.ui.Select;
 import ua.sampsa.addressbook.model.ContactData;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ContactHelper extends HelperBase{
 
@@ -47,11 +49,18 @@ public class ContactHelper extends HelperBase{
 
   public void select(int index) {
     wd.findElements(By.name("selected[]")).get(index).click();
+  }
 
+  public void selectById(int id) {
+    wd.findElement(By.cssSelector("input[value ='" + id + "']")).click();
   }
 
   public void initContactModification(int index) {
     wd.findElements(By.xpath("//img[@alt='Edit']")).get(index).click();
+  }
+
+  public void initContactModificationById(int id) {
+    wd.findElement(By.cssSelector("a[href ='edit.php?id=" + id + "']")).click();
   }
 
   public void updateNewContact() {
@@ -68,15 +77,15 @@ public class ContactHelper extends HelperBase{
     submitNewContact();
   }
 
-  public void modify(ContactData modifiedContact, int index) {
-    initContactModification(index);
+  public void modifyById(ContactData modifiedContact) {
+    initContactModificationById(modifiedContact.getId());
     fillNewContactForm(modifiedContact);
     updateNewContact();
     returnToHomePage();
   }
 
-  public void delete(int index) {
-    select(index);
+  public void deleteById(ContactData randomDeletedContact) {
+    selectById(randomDeletedContact.getId());
     delete();
     returnToHomePage();
   }
@@ -90,11 +99,8 @@ public class ContactHelper extends HelperBase{
   }
 
   public List<ContactData> list() {
-
     List<ContactData> contacts = new ArrayList<ContactData>(); //Create the List to fill
-
     List<WebElement> rows = wd.findElements(By.cssSelector("tr[name='entry']"));     //Get all rows
-
     for (WebElement row : rows ) {                                 //Get data (id, firstName, lastName) from each row
       int id = Integer.parseInt(row.findElement(By.cssSelector("td:nth-child(1) input")).getAttribute("value"));
       String lastName = row.findElement(By.cssSelector("td:nth-child(2)")).getText();
@@ -103,4 +109,17 @@ public class ContactHelper extends HelperBase{
     }
     return contacts;
   }
+
+  public Set<ContactData> all() {
+    Set<ContactData> contacts = new HashSet<ContactData>(); //Create the Set to fill
+    List<WebElement> rows = wd.findElements(By.cssSelector("tr[name='entry']"));     //Get all rows
+    for (WebElement row : rows ) {                                 //Get data (id, firstName, lastName) from each row
+      int id = Integer.parseInt(row.findElement(By.cssSelector("td:nth-child(1) input")).getAttribute("value"));
+      String lastName = row.findElement(By.cssSelector("td:nth-child(2)")).getText();
+      String firstName = row.findElement(By.cssSelector("td:nth-child(3)")).getText();
+      contacts.add(new ContactData().withId(id).withLastName(lastName).withFirstName(firstName));
+    }
+    return contacts;
+  }
+
 }
