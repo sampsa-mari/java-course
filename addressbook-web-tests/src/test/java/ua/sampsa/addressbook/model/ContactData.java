@@ -18,6 +18,9 @@ public class ContactData {
     private String dayOfBirth;
     private String monthOfBirth;
     private String yearOfBirth;
+    private String allPhones;
+
+
 
   public ContactData withId(int id) {
     this.id = id;
@@ -51,6 +54,11 @@ public class ContactData {
 
   public ContactData withAddress(String address) {
     this.address = address;
+    return this;
+  }
+
+  public ContactData withAllPhones(String allPhones) {
+    this.allPhones = allPhones;
     return this;
   }
 
@@ -139,6 +147,8 @@ public class ContactData {
       return yearOfBirth;
     }
 
+    public String getAllPhones() { return allPhones; }
+
 
   @Override
   public String toString() {
@@ -148,6 +158,7 @@ public class ContactData {
             ", lastName='" + lastName + '\'' +
             '}';
   }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -157,7 +168,13 @@ public class ContactData {
 
     if (id != that.id) return false;
     if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) return false;
-    return firstName != null ? firstName.equals(that.firstName) : that.firstName == null;
+    if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
+    if (homePhone != null ? !homePhone.equals(that.homePhone) : that.homePhone != null) return false;
+    if (mobilePhone != null ? !mobilePhone.equals(that.mobilePhone) : that.mobilePhone != null) return false;
+    if (workPhone != null ? !workPhone.equals(that.workPhone) : that.workPhone != null) return false;
+    if (monthOfBirth != null ? !monthOfBirth.equals(that.monthOfBirth) : that.monthOfBirth != null) return false;
+    if (yearOfBirth != null ? !yearOfBirth.equals(that.yearOfBirth) : that.yearOfBirth != null) return false;
+    return allPhones != null ? allPhones.equals(that.allPhones) : that.allPhones == null;
   }
 
   @Override
@@ -165,7 +182,12 @@ public class ContactData {
     int result = id;
     result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
     result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+    result = 31 * result + (homePhone != null ? homePhone.hashCode() : 0);
+    result = 31 * result + (mobilePhone != null ? mobilePhone.hashCode() : 0);
+    result = 31 * result + (workPhone != null ? workPhone.hashCode() : 0);
+    result = 31 * result + (monthOfBirth != null ? monthOfBirth.hashCode() : 0);
+    result = 31 * result + (yearOfBirth != null ? yearOfBirth.hashCode() : 0);
+    result = 31 * result + (allPhones != null ? allPhones.hashCode() : 0);
     return result;
   }
-
 }

@@ -21,9 +21,9 @@ public class ContactTests extends TestBase {
               .withNickName("Rock-n-Roll")
               .withCompanyName("Yandex")
               .withAddress("Pobedy Street, 25")
-             // .withHomePhone("111")
+              .withHomePhone("111")
               .withMobilePhone("222")
-             // .withWorkPhone("333")
+              .withWorkPhone("333")
               .withEmail("pupkin@yandex.ru")
               .withDayOfBirth("1")
               .withMonthOfBirth( "January")
@@ -82,7 +82,7 @@ public class ContactTests extends TestBase {
     assertThat(afterNewContactAdded, equalTo(beforeNewContactAdded));
   }
 
-  @Test(enabled = true)
+  @Test(enabled = false)
   public void testEditContact(){
     Contacts beforeContactModification = app.contact().all();
     ContactData randomEditedContact = beforeContactModification.iterator().next(); // select from Set random contact that will be modified. 'iterator()' iterates over the elements in Set sequentially and 'next()' returns random element from Set
@@ -94,9 +94,9 @@ public class ContactTests extends TestBase {
             .withNickName("ohne")
             .withCompanyName("mzilla")
            // .withAddress("MinskerStreet, 25")
-            .withHomePhone("777")
-            .withMobilePhone("888")
-            .withWorkPhone("999")
+            .withHomePhone("888777")
+            .withMobilePhone("888888")
+            .withWorkPhone("888999")
             .withEmail( "olen@yandex.ru")
             .withDayOfBirth("3")
             .withMonthOfBirth("March")
@@ -118,11 +118,15 @@ public class ContactTests extends TestBase {
     assertThat(afterDeletion, equalTo(beforeDeletion.without(randomDeletedContact)));
   }
 
-  @Test(enabled = false)
+  @Test(enabled = true)
   public void testContactsPhones(){
-    ContactData contact = app.contact().all().iterator().next();
-    Contacts beforeContactModification = app.contact().all();
+    //Contacts beforeContactModification = app.contact().all();
+    ContactData selectContactForModification = app.contact().all().iterator().next();
+    ContactData contactInfoFromEditForm = app.contact().infoFromEditForm(selectContactForModification);
 
+    assertThat(selectContactForModification.getHomePhone(), equalTo(contactInfoFromEditForm.getHomePhone()));
+   // assertThat(selectContactForModification.getMobilePhone(), equalTo(contactInfoFromEditForm.getMobilePhone()));
+   // assertThat(selectContactForModification.getWorkPhone(), equalTo(contactInfoFromEditForm.getWorkPhone()));
 
   }
 }

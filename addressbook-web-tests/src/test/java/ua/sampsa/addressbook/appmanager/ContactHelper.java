@@ -7,10 +7,8 @@ import org.openqa.selenium.support.ui.Select;
 import ua.sampsa.addressbook.model.ContactData;
 import ua.sampsa.addressbook.model.Contacts;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
 
 public class ContactHelper extends HelperBase{
 
@@ -34,7 +32,9 @@ public class ContactHelper extends HelperBase{
     type(By.name("nickname"),newContactData.getNickName());
     type(By.name("company"),newContactData.getCompanyName());
     type(By.name("address"),newContactData.getAddress());
+    type(By.name("home"),newContactData.getHomePhone());
     type(By.name("mobile"),newContactData.getMobilePhone());
+    type(By.name("work"),newContactData.getWorkPhone());
     type(By.name("email"),newContactData.getEmail());
 
     wd.findElement(By.name("bday")).click();
@@ -124,11 +124,22 @@ public class ContactHelper extends HelperBase{
       String lastName = row.findElement(By.cssSelector("td:nth-child(2)")).getText();
       String firstName = row.findElement(By.cssSelector("td:nth-child(3)")).getText();
       String[] allPhones = row.findElement(By.cssSelector("td:nth-child(6)")).getText().split("\n");
-
       contactsCache.add(new ContactData().withId(id).withLastName(lastName).withFirstName(firstName)
               .withHomePhone(allPhones[0]).withMobilePhone(allPhones[1]).withWorkPhone(allPhones[2]));
     }
     return contactsCache;
+  }
+
+  public ContactData infoFromEditForm(ContactData contact) {
+    initContactModificationById(contact.getId());
+    String firstname = wd.findElement(By.name("firstname")).getAttribute("value");
+    String lastname = wd.findElement(By.name("lastname")).getAttribute("value");
+    String home = wd.findElement(By.name("home")).getAttribute("value");
+    String mobile = wd.findElement(By.name("mobile")).getAttribute("value");
+    String work = wd.findElement(By.name("work")).getAttribute("value");
+    wd.navigate().back();
+    return new ContactData().withId(contact.getId()).withFirstName(contact.getFirstName()).withLastName(contact.getLastName())
+            .withHomePhone(contact.getHomePhone()).withMobilePhone(contact.getMobilePhone()).withWorkPhone(contact.getWorkPhone());
   }
 
 //  public Contacts all() {
