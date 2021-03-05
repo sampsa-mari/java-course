@@ -113,21 +113,39 @@ public class ContactHelper extends HelperBase{
 //    }
 //    return contacts;
 //  }
+
   private Contacts contactsCache = null;
 
   public Contacts all() {
-    if (contactsCache != null){
-      return new Contacts(contactsCache);
-    }
     contactsCache = new Contacts(); //Create the Set to fill (object that creating in Contacts class)
     List<WebElement> rows = wd.findElements(By.cssSelector("tr[name='entry']"));     //Get all rows
     for (WebElement row : rows ) {                                 //Get data (id, firstName, lastName) from each row
       int id = Integer.parseInt(row.findElement(By.cssSelector("td:nth-child(1) input")).getAttribute("value"));
       String lastName = row.findElement(By.cssSelector("td:nth-child(2)")).getText();
       String firstName = row.findElement(By.cssSelector("td:nth-child(3)")).getText();
-      contactsCache.add(new ContactData().withId(id).withLastName(lastName).withFirstName(firstName));
+      String[] allPhones = row.findElement(By.cssSelector("td:nth-child(6)")).getText().split("\n");
+
+      contactsCache.add(new ContactData().withId(id).withLastName(lastName).withFirstName(firstName)
+              .withHomePhone(allPhones[0]).withMobilePhone(allPhones[1]).withWorkPhone(allPhones[2]));
     }
-    return new Contacts(contactsCache);
+    return contactsCache;
   }
+
+//  public Contacts all() {
+//    if (contactsCache != null){
+//      return new Contacts(contactsCache);
+//    }
+//    contactsCache = new Contacts(); //Create the Set to fill (object that creating in Contacts class)
+//    List<WebElement> rows = wd.findElements(By.cssSelector("tr[name='entry']"));     //Get all rows
+//    for (WebElement row : rows ) {                               //Get data (id, firstName, lastName) from each row
+//      List<WebElement> cells = row.findElements(By.tagName("td"));
+//      int id = Integer.parseInt(cells.get(0).findElement(By.tagName("input")).getAttribute("value"));
+//      String lastName = cells.get(1).getText();
+//      String firstName = cells.get(2).getText();
+//      String[] allPhones = cells.get(5).getText().split("\n");
+//      contactsCache.add(new ContactData().withId(id).withLastName(lastName).withFirstName(firstName));
+//    }
+//    return new Contacts(contactsCache);
+//  }
 
 }
