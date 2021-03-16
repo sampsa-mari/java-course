@@ -98,8 +98,6 @@ public class ContactHelper extends HelperBase{
     return isElementPresent(By.name("selected[]"));
   }
 
-  public String cleaned(String phone){ return phone.replaceAll("\\s", "").replaceAll("[-()]", ""); }
-
   public int count()  {
     return wd.findElements(By.name("selected[]")).size();
   }
@@ -125,9 +123,8 @@ public class ContactHelper extends HelperBase{
       int id = Integer.parseInt(row.findElement(By.cssSelector("td:nth-child(1) input")).getAttribute("value"));
       String lastName = row.findElement(By.cssSelector("td:nth-child(2)")).getText();
       String firstName = row.findElement(By.cssSelector("td:nth-child(3)")).getText();
-      String[] allPhones = row.findElement(By.cssSelector("td:nth-child(6)")).getText().split("\n");
-      contactsCache.add(new ContactData().withId(id).withLastName(lastName).withFirstName(firstName)
-              .withHomePhone(allPhones[0]).withMobilePhone(allPhones[1]).withWorkPhone(allPhones[2]));
+      String allPhones = row.findElement(By.cssSelector("td:nth-child(6)")).getText();
+      contactsCache.add(new ContactData().withId(id).withLastName(lastName).withFirstName(firstName).withAllPhones(allPhones));
     }
     return contactsCache;
   }
