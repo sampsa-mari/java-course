@@ -98,6 +98,8 @@ public class ContactHelper extends HelperBase{
     return isElementPresent(By.name("selected[]"));
   }
 
+  public String cleaned(String phone){ return phone.replaceAll("\\s", "").replaceAll("[-()]", ""); }
+
   public int count()  {
     return wd.findElements(By.name("selected[]")).size();
   }
@@ -134,14 +136,13 @@ public class ContactHelper extends HelperBase{
     initContactModificationById(contact.getId());
     String firstname = wd.findElement(By.name("firstname")).getAttribute("value");
     String lastname = wd.findElement(By.name("lastname")).getAttribute("value");
-    String home = wd.findElement(By.name("home")).getAttribute("value");
-    String mobile = wd.findElement(By.name("mobile")).getAttribute("value");
-    String work = wd.findElement(By.name("work")).getAttribute("value");
+    String homephone = wd.findElement(By.name("home")).getAttribute("value");
+    String mobilephone = wd.findElement(By.name("mobile")).getAttribute("value");
+    String workphone = wd.findElement(By.name("work")).getAttribute("value");
     wd.navigate().back();
-    return new ContactData().withId(contact.getId()).withFirstName(contact.getFirstName()).withLastName(contact.getLastName())
-            .withHomePhone(contact.getHomePhone()).withMobilePhone(contact.getMobilePhone()).withWorkPhone(contact.getWorkPhone());
+    return new ContactData().withId(contact.getId()).withFirstName(firstname).withLastName(lastname).
+            withHomePhone(homephone).withMobilePhone(mobilephone).withWorkPhone(workphone);
   }
-
 //  public Contacts all() {
 //    if (contactsCache != null){
 //      return new Contacts(contactsCache);

@@ -168,13 +168,7 @@ public class ContactData {
 
     if (id != that.id) return false;
     if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) return false;
-    if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
-    if (homePhone != null ? !homePhone.equals(that.homePhone) : that.homePhone != null) return false;
-    if (mobilePhone != null ? !mobilePhone.equals(that.mobilePhone) : that.mobilePhone != null) return false;
-    if (workPhone != null ? !workPhone.equals(that.workPhone) : that.workPhone != null) return false;
-    if (monthOfBirth != null ? !monthOfBirth.equals(that.monthOfBirth) : that.monthOfBirth != null) return false;
-    if (yearOfBirth != null ? !yearOfBirth.equals(that.yearOfBirth) : that.yearOfBirth != null) return false;
-    return allPhones != null ? allPhones.equals(that.allPhones) : that.allPhones == null;
+    return firstName != null ? firstName.equals(that.firstName) : that.firstName == null;
   }
 
   @Override
@@ -182,12 +176,6 @@ public class ContactData {
     int result = id;
     result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
     result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
-    result = 31 * result + (homePhone != null ? homePhone.hashCode() : 0);
-    result = 31 * result + (mobilePhone != null ? mobilePhone.hashCode() : 0);
-    result = 31 * result + (workPhone != null ? workPhone.hashCode() : 0);
-    result = 31 * result + (monthOfBirth != null ? monthOfBirth.hashCode() : 0);
-    result = 31 * result + (yearOfBirth != null ? yearOfBirth.hashCode() : 0);
-    result = 31 * result + (allPhones != null ? allPhones.hashCode() : 0);
     return result;
   }
 }

@@ -32,11 +32,11 @@ public class ContactTests extends TestBase {
     }
   }
 
-  @Test(enabled = false)
+  @Test(enabled = true)
   public void testNewContact() throws Exception {
     Contacts beforeNewContactAdded = app.contact().all();
     app.goTo().addNewPage();
-    ContactData newContact = new ContactData()
+     ContactData newContact = new ContactData()
             .withFirstName("Vasya")
             .withMiddleName("Olegovich")
             .withLastName("Pupkin")
@@ -57,7 +57,7 @@ public class ContactTests extends TestBase {
     assertThat(afterNewContactAdded, equalTo(beforeNewContactAdded.withAdded(newContact.withId(afterNewContactAdded.stream().mapToInt((c) -> c.getId()).max().getAsInt()))));
   }
 
-  @Test(enabled = false)
+  @Test(enabled = true)
   public void testBadNameContact() throws Exception {
     Contacts beforeNewContactAdded = app.contact().all();
     app.goTo().addNewPage();
@@ -82,7 +82,7 @@ public class ContactTests extends TestBase {
     assertThat(afterNewContactAdded, equalTo(beforeNewContactAdded));
   }
 
-  @Test(enabled = false)
+  @Test(enabled = true)
   public void testEditContact(){
     Contacts beforeContactModification = app.contact().all();
     ContactData randomEditedContact = beforeContactModification.iterator().next(); // select from Set random contact that will be modified. 'iterator()' iterates over the elements in Set sequentially and 'next()' returns random element from Set
@@ -108,7 +108,7 @@ public class ContactTests extends TestBase {
     assertThat(afterContactModification, equalTo(beforeContactModification.without(randomEditedContact).withAdded(modifiedContact)));
   }
 
-  @Test(enabled = false)
+  @Test(enabled = true)
   public void testDeleteContact(){
     Contacts beforeDeletion = app.contact().all();
     ContactData randomDeletedContact = beforeDeletion.iterator().next(); // 'iterator()' iterates over the elements in Set sequentially and 'next()' returns random element from Set
@@ -120,13 +120,11 @@ public class ContactTests extends TestBase {
 
   @Test(enabled = true)
   public void testContactsPhones(){
-    //Contacts beforeContactModification = app.contact().all();
     ContactData selectContactForModification = app.contact().all().iterator().next();
     ContactData contactInfoFromEditForm = app.contact().infoFromEditForm(selectContactForModification);
 
-    assertThat(selectContactForModification.getHomePhone(), equalTo(contactInfoFromEditForm.getHomePhone()));
-   // assertThat(selectContactForModification.getMobilePhone(), equalTo(contactInfoFromEditForm.getMobilePhone()));
-   // assertThat(selectContactForModification.getWorkPhone(), equalTo(contactInfoFromEditForm.getWorkPhone()));
-
+    assertThat(selectContactForModification.getHomePhone(), equalTo(app.contact().cleaned(contactInfoFromEditForm.getHomePhone())));
+    assertThat(selectContactForModification.getMobilePhone(), equalTo(app.contact().cleaned(contactInfoFromEditForm.getMobilePhone())));
+    assertThat(selectContactForModification.getWorkPhone(), equalTo(app.contact().cleaned(contactInfoFromEditForm.getWorkPhone())));
   }
 }
