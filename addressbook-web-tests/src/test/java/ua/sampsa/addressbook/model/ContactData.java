@@ -14,13 +14,19 @@ public class ContactData {
     private String homePhone;
     private String mobilePhone;
     private String workPhone;
+    private String allEMails;
     private String email;
+    private String email2;
+    private String email3;
     private String dayOfBirth;
     private String monthOfBirth;
     private String yearOfBirth;
     private String allPhones;
 
-
+  public ContactData withAllEMails(String allEMails) {
+    this.allEMails = allEMails;
+    return this;
+  }
 
   public ContactData withId(int id) {
     this.id = id;
@@ -82,6 +88,16 @@ public class ContactData {
     return this;
   }
 
+  public ContactData withEmail2(String email2) {
+    this.email2 = email2;
+    return this;
+  }
+
+  public ContactData withEmail3(String email3) {
+    this.email3 = email3;
+    return this;
+  }
+
   public ContactData withDayOfBirth(String dayOfBirth) {
     this.dayOfBirth = dayOfBirth;
     return this;
@@ -119,9 +135,9 @@ public class ContactData {
       return companyName;
     }
 
-    public String getAddress() {
-      return address;
-    }
+    public String getAddress() { return address; }
+
+    public String getAllPhones() { return allPhones; }
 
     public String getHomePhone() { return homePhone; }
 
@@ -131,9 +147,15 @@ public class ContactData {
 
     public String getWorkPhone() { return workPhone; }
 
+    public String getAllEMails() { return allEMails; }
+
     public String getEmail() {
-      return email;
-    }
+    return email;
+  }
+
+    public String getEmail2() { return email2; }
+
+    public String getEmail3() { return email3; }
 
     public String getDayOfBirth() {
       return dayOfBirth;
@@ -146,8 +168,6 @@ public class ContactData {
     public String getYearOfBirth() {
       return yearOfBirth;
     }
-
-    public String getAllPhones() { return allPhones; }
 
 
   @Override

@@ -27,7 +27,9 @@ public class ContactTests extends TestBase {
               .withHomePhone("111")
               .withMobilePhone("222")
               .withWorkPhone("333")
-              .withEmail("pupkin@yandex.ru")
+              .withEmail("email1@yandex.ru")
+              .withEmail2("email2@yandex.ru")
+              .withEmail3("email3@yandex.ru")
               .withDayOfBirth("1")
               .withMonthOfBirth( "January")
               .withYearOfBirth("1987"));
@@ -40,19 +42,21 @@ public class ContactTests extends TestBase {
     Contacts beforeNewContactAdded = app.contact().all();
     app.goTo().addNewPage();
      ContactData newContact = new ContactData()
-            .withFirstName("Vasya")
-            .withMiddleName("Olegovich")
-            .withLastName("Pupkin")
-            .withNickName("Rock-n-Roll")
-            .withCompanyName("Yandex")
-            .withAddress("Pobedy Street, 25")
-            .withHomePhone("444")
-            .withMobilePhone("555")
-            .withWorkPhone("666")
-            .withEmail("pupkin@yandex.ru")
-            .withDayOfBirth("1")
-            .withMonthOfBirth( "January")
-            .withYearOfBirth("1987");
+             .withFirstName("Vasya")
+             .withMiddleName("Olegovich")
+             .withLastName("Pupkin")
+             .withNickName("Rock-n-Roll")
+             .withCompanyName("Yandex")
+             .withAddress("Pobedy Street, 25")
+             .withHomePhone("444")
+             .withMobilePhone("555")
+             .withWorkPhone("666")
+             .withEmail("email1@yandex.ru")
+             .withEmail2("email2@yandex.ru")
+             .withEmail3("email3@yandex.ru")
+             .withDayOfBirth("1")
+             .withMonthOfBirth("January")
+             .withYearOfBirth("1987");
     app.contact().create(newContact);
     app.contact().returnToHomePage();
     assertThat(app.contact().count(), equalTo(beforeNewContactAdded.size() + 1));
@@ -74,7 +78,9 @@ public class ContactTests extends TestBase {
             .withHomePhone("444")
             .withMobilePhone("555")
             .withWorkPhone("666")
-            .withEmail("pupkin@yandex.ru")
+            .withEmail("email1@yandex.ru")
+            .withEmail2("email2@yandex.ru")
+            .withEmail3("email3@yandex.ru")
             .withDayOfBirth("1")
             .withMonthOfBirth( "January")
             .withYearOfBirth("1987");
@@ -100,7 +106,9 @@ public class ContactTests extends TestBase {
             .withHomePhone("888777")
             .withMobilePhone("888888")
             .withWorkPhone("888999")
-            .withEmail( "olen@yandex.ru")
+            .withEmail("email1@yandex.ru")
+            .withEmail2("email2@yandex.ru")
+            .withEmail3("email3@yandex.ru")
             .withDayOfBirth("3")
             .withMonthOfBirth("March")
             .withYearOfBirth("1997");
@@ -139,4 +147,26 @@ public class ContactTests extends TestBase {
 
   public static String cleaned(String phone){ return phone.replaceAll("\\s", "").replaceAll("[-()]", ""); }
 
+
+  @Test(enabled = true)
+  public void testPostAddress(){
+    ContactData selectContactForModification = app.contact().all().iterator().next();
+    ContactData contactInfoFromEditForm = app.contact().infoFromEditForm(selectContactForModification);
+
+    assertThat(selectContactForModification.getAddress(), equalTo(contactInfoFromEditForm.getAddress()));
+  }
+
+  @Test(enabled = true)
+  public void testEMails(){
+    ContactData selectContactForModification = app.contact().all().iterator().next();
+    ContactData contactInfoFromEditForm = app.contact().infoFromEditForm(selectContactForModification);
+
+    assertThat(selectContactForModification.getAllEMails(), equalTo(mergeEMails(contactInfoFromEditForm)));
+  }
+  private String mergeEMails(ContactData contactInfoFromEditForm) {
+    return Arrays.asList(contactInfoFromEditForm.getEmail(), contactInfoFromEditForm.getEmail2(),contactInfoFromEditForm.getEmail3())
+            .stream().filter((s) -> !s.equals(""))
+            .map(ContactTests::cleaned)
+            .collect(Collectors.joining("\n"));
+  }
 }
