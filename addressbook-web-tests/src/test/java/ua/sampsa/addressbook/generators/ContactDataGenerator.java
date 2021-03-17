@@ -39,8 +39,10 @@ public class ContactDataGenerator {
   private static List<ContactData> generateContacts(int count) {
     List<ContactData> contacts = new ArrayList<ContactData>();
     for (int i = 0; i < count; i++){
-      contacts.add(new ContactData().withFirstName(String.format("FirstName %s", i))
-              .withLastName(String.format("LastName %s", i)).withAddress(String.format("Address %s", i)));
+      contacts.add(new ContactData()
+              .withFirstName(String.format("FirstName %s", i))
+              .withLastName(String.format("LastName %s", i))
+              .withAddress(String.format("Address %s", i)));
     }
     return contacts;
   }
