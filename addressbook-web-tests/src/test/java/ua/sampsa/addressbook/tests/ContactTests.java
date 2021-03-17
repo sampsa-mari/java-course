@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import ua.sampsa.addressbook.model.ContactData;
 import ua.sampsa.addressbook.model.Contacts;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,7 @@ public class ContactTests extends TestBase {
   public void ensurePreconditions_atLeastOneContactIsPresent(){
     if(app.contact().all().size() == 0){
       app.goTo().addNewPage();
+      File photo = new File("src/test/resources/Mila.png");
       app.contact().create(new ContactData()
               .withFirstName("Vasya")
               .withMiddleName("Olegovich")
@@ -32,7 +34,9 @@ public class ContactTests extends TestBase {
               .withEmail3("email3@yandex.ru")
               .withDayOfBirth("1")
               .withMonthOfBirth( "January")
-              .withYearOfBirth("1987"));
+              .withYearOfBirth("1987")
+              .withPhoto(photo));
+
       app.contact().returnToHomePage();
     }
   }
@@ -41,6 +45,7 @@ public class ContactTests extends TestBase {
   public void testNewContact() throws Exception {
     Contacts beforeNewContactAdded = app.contact().all();
     app.goTo().addNewPage();
+     File photo = new File("src/test/resources/Mila.png");
      ContactData newContact = new ContactData()
              .withFirstName("Vasya")
              .withMiddleName("Olegovich")
@@ -56,7 +61,9 @@ public class ContactTests extends TestBase {
              .withEmail3("email3@yandex.ru")
              .withDayOfBirth("1")
              .withMonthOfBirth("January")
-             .withYearOfBirth("1987");
+             .withYearOfBirth("1987")
+             .withPhoto(photo);
+
     app.contact().create(newContact);
     app.contact().returnToHomePage();
     assertThat(app.contact().count(), equalTo(beforeNewContactAdded.size() + 1));
@@ -64,7 +71,17 @@ public class ContactTests extends TestBase {
     assertThat(afterNewContactAdded, equalTo(beforeNewContactAdded.withAdded(newContact.withId(afterNewContactAdded.stream().mapToInt((c) -> c.getId()).max().getAsInt()))));
   }
 
-  @Test(enabled = true)
+  //Test to identify path to file and existence of the file
+  @Test(enabled = false)
+  public void testCurrentDir(){
+    File currentDir = new File(".");
+    System.out.println(currentDir.getAbsolutePath());
+    File photo = new File("src/test/resources/Mila.png");
+    System.out.println(photo.getAbsolutePath());
+    System.out.println(photo.exists());
+  }
+
+  @Test(enabled = false)
   public void testBadNameContact() throws Exception {
     Contacts beforeNewContactAdded = app.contact().all();
     app.goTo().addNewPage();
@@ -95,6 +112,7 @@ public class ContactTests extends TestBase {
   public void testEditContact(){
     Contacts beforeContactModification = app.contact().all();
     ContactData randomEditedContact = beforeContactModification.iterator().next(); // select from Set random contact that will be modified. 'iterator()' iterates over the elements in Set sequentially and 'next()' returns random element from Set
+    File photo = new File("src/test/resources/edited.jpg");
     ContactData modifiedContact = new ContactData()
             .withId(randomEditedContact.getId())
             .withFirstName("Gena")
@@ -111,7 +129,9 @@ public class ContactTests extends TestBase {
             .withEmail3("email3@yandex.ru")
             .withDayOfBirth("3")
             .withMonthOfBirth("March")
-            .withYearOfBirth("1997");
+            .withYearOfBirth("1997")
+            .withPhoto(photo);;
+
 
     app.contact().modifyById(modifiedContact);
     assertThat(app.contact().count(), equalTo(beforeContactModification.size()));
@@ -119,7 +139,7 @@ public class ContactTests extends TestBase {
     assertThat(afterContactModification, equalTo(beforeContactModification.without(randomEditedContact).withAdded(modifiedContact)));
   }
 
-  @Test(enabled = true)
+  @Test(enabled = false)
   public void testDeleteContact(){
     Contacts beforeDeletion = app.contact().all();
     ContactData randomDeletedContact = beforeDeletion.iterator().next(); // 'iterator()' iterates over the elements in Set sequentially and 'next()' returns random element from Set
@@ -129,7 +149,7 @@ public class ContactTests extends TestBase {
     assertThat(afterDeletion, equalTo(beforeDeletion.without(randomDeletedContact)));
   }
 
-  @Test(enabled = true)
+  @Test(enabled = false)
   public void testContactsPhones(){
     ContactData selectContactForModification = app.contact().all().iterator().next();
     ContactData contactInfoFromEditForm = app.contact().infoFromEditForm(selectContactForModification);
@@ -148,19 +168,17 @@ public class ContactTests extends TestBase {
   public static String cleaned(String phone){ return phone.replaceAll("\\s", "").replaceAll("[-()]", ""); }
 
 
-  @Test(enabled = true)
+  @Test(enabled = false)
   public void testPostAddress(){
     ContactData selectContactForModification = app.contact().all().iterator().next();
     ContactData contactInfoFromEditForm = app.contact().infoFromEditForm(selectContactForModification);
-
     assertThat(selectContactForModification.getAddress(), equalTo(contactInfoFromEditForm.getAddress()));
   }
 
-  @Test(enabled = true)
+  @Test(enabled = false)
   public void testEMails(){
     ContactData selectContactForModification = app.contact().all().iterator().next();
     ContactData contactInfoFromEditForm = app.contact().infoFromEditForm(selectContactForModification);
-
     assertThat(selectContactForModification.getAllEMails(), equalTo(mergeEMails(contactInfoFromEditForm)));
   }
   private String mergeEMails(ContactData contactInfoFromEditForm) {

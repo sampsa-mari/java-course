@@ -38,6 +38,7 @@ public class ContactHelper extends HelperBase{
     type(By.name("email"),newContactData.getEmail());
     type(By.name("email2"),newContactData.getEmail2());
     type(By.name("email3"),newContactData.getEmail3());
+    attach(By.name("photo"),newContactData.getPhoto());
 
     wd.findElement(By.name("bday")).click();
     new Select(wd.findElement(By.name("bday"))).selectByVisibleText(newContactData.getDayOfBirth());

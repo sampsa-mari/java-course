@@ -1,5 +1,7 @@
 package ua.sampsa.addressbook.model;
 
+import java.io.File;
+
 /**
  * Created by Maryna Tkachuk on 15.12.20.
  */
@@ -22,6 +24,12 @@ public class ContactData {
     private String monthOfBirth;
     private String yearOfBirth;
     private String allPhones;
+    private File photo;
+
+  public ContactData withPhoto(File photo) {
+    this.photo = photo;
+    return this;
+  }
 
   public ContactData withAllEMails(String allEMails) {
     this.allEMails = allEMails;
@@ -168,6 +176,8 @@ public class ContactData {
     public String getYearOfBirth() {
       return yearOfBirth;
     }
+
+    public File getPhoto() { return photo; }
 
 
   @Override
