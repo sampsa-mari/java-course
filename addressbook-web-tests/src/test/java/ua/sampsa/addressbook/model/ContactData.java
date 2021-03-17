@@ -1,5 +1,6 @@
 package ua.sampsa.addressbook.model;
 
+import com.google.gson.annotations.Expose;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
@@ -8,26 +9,40 @@ import java.io.File;
 @XStreamAlias("contact")
 
 public class ContactData {
-    @XStreamOmitField
-    private int id = 0;
-    private String lastName;
-    private String middleName;
-    private String firstName;
-    private String nickName;
-    private String companyName;
-    private String address;
-    private String homePhone;
-    private String mobilePhone;
-    private String workPhone;
-    private String allEMails;
-    private String email;
-    private String email2;
-    private String email3;
-    private String dayOfBirth;
-    private String monthOfBirth;
-    private String yearOfBirth;
-    private String allPhones;
-    private File photo;
+  @XStreamOmitField
+  private int id = 0;
+  @Expose
+  private String lastName;
+  private String middleName;
+  @Expose
+  private String firstName;
+  @Expose
+  private String nickName;
+  @Expose
+  private String companyName;
+  @Expose
+  private String address;
+  @Expose
+  private String homePhone;
+  @Expose
+  private String mobilePhone;
+  @Expose
+  private String workPhone;
+  private String allEMails;
+  @Expose
+  private String email;
+  @Expose
+  private String email2;
+  @Expose
+  private String email3;
+  @Expose
+  private String dayOfBirth;
+  @Expose
+  private String monthOfBirth;
+  @Expose
+  private String yearOfBirth;
+  private String allPhones;
+  private File photo;
 
   public ContactData withPhoto(File photo) {
     this.photo = photo;

@@ -1,5 +1,7 @@
 package ua.sampsa.addressbook.tests;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.thoughtworks.xstream.XStream;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -56,6 +58,20 @@ public class GroupTests extends TestBase {
   }
 
   @DataProvider
+  public Iterator<Object[]> newValidGroupsFromJSON() throws IOException {
+    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/files/groups.json")));
+    String json = "";
+    String line = reader.readLine();
+    while (line !=null){
+      json += line;
+      line = reader.readLine();
+    }
+    Gson gson = new Gson();
+    List<GroupData> groups = gson.fromJson(json, new TypeToken<List<GroupData>>(){}.getType()); //which means like - List<GroupData>.class
+    return groups.stream().map((g) -> new Object[] {g}).collect(Collectors.toList()).iterator();
+  }
+
+  @DataProvider
   public Iterator<Object[]> invalidGroups() throws IOException {
     List<Object[]> list = new ArrayList<Object[]>();
     BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/files/invalid-groups.csv")));
@@ -81,7 +97,7 @@ public class GroupTests extends TestBase {
     return list.iterator();
   }
 
-  @Test(dataProvider = "newValidGroupsFromXML")
+  @Test(dataProvider = "newValidGroupsFromJSON")
   public void testGroupCreation(GroupData newGroup) throws Exception {
     Groups before = app.group().all();
     app.group().create(newGroup);

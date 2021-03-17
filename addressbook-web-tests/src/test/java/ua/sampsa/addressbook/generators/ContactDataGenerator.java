@@ -3,6 +3,8 @@ package ua.sampsa.addressbook.generators;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.thoughtworks.xstream.XStream;
 import ua.sampsa.addressbook.model.ContactData;
 
@@ -45,9 +47,19 @@ public class ContactDataGenerator {
       saveAsCsv(contact, new File(file));
     } else if (format.equals("xml")){
       saveAsXml(contact, new File(file));
-    } else {
+    } else if (format.equals("json")){
+      saveAsJson(contact, new File(file));
+    }else {
       System.out.println("Unrecognized format " + format);
     }
+  }
+
+  private void saveAsJson(List<ContactData> contact, File file) throws IOException {
+    Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+    String json = gson.toJson(contact);
+    Writer writer = new FileWriter(file);
+    writer.write(json);
+    writer.close();
   }
 
   private void saveAsXml(List<ContactData> contacts, File file) throws IOException {
@@ -75,8 +87,8 @@ public class ContactDataGenerator {
     List<ContactData> contacts = new ArrayList<ContactData>();
     for (int i = 0; i < count; i++){
       contacts.add(new ContactData()
-              .withFirstName(String.format("FirstName %s", i))
-              .withLastName(String.format("XMLLastName %s", i))
+              .withFirstName(String.format("JSONFirstName %s", i))
+              .withLastName(String.format("LastName %s", i))
               .withAddress(String.format("Address %s", i))
               .withNickName(String.format("Rock-n-Roll"))
               .withCompanyName(String.format("Yandex"))

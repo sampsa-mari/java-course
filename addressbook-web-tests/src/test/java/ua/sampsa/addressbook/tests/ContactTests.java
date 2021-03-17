@@ -1,5 +1,7 @@
 package ua.sampsa.addressbook.tests;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.thoughtworks.xstream.XStream;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -81,6 +83,20 @@ public class ContactTests extends TestBase {
   }
 
   @DataProvider
+  public Iterator<Object[]> newValidContactsFromJSON() throws IOException {
+    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/files/contacts.json")));
+    String json = "";
+    String line = reader.readLine();
+    while (line !=null){
+      json += line;
+      line = reader.readLine();
+    }
+    Gson gson = new Gson();
+    List<ContactData> contacts = gson.fromJson(json, new TypeToken<List<ContactData>>(){}.getType());
+    return contacts.stream().map((g) -> new Object[] {g}).collect(Collectors.toList()).iterator();
+  }
+
+  @DataProvider
   public Iterator<Object[]> invalidContacts() throws IOException {
     List<Object[]> list = new ArrayList<Object[]>();
     BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/files/invalid-contacts.csv")));
@@ -96,7 +112,7 @@ public class ContactTests extends TestBase {
     return list.iterator();
   }
 
-  @Test(dataProvider = "newValidContactsFromXML")
+  @Test(dataProvider = "newValidContactsFromJSON")
   public void testNewContactWithoutPhoto(ContactData newContact) throws Exception {
     Contacts beforeNewContactAdded = app.contact().all();
     app.goTo().addNewPage();

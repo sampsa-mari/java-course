@@ -1,0 +1,34 @@
+[
+  {
+    "lastName": "LastName 0",
+    "firstName": "JSONFirstName 0",
+    "nickName": "Rock-n-Roll",
+    "companyName": "Yandex",
+    "address": "Address 0",
+    "homePhone": "4440",
+    "mobilePhone": "5550",
+    "workPhone": "6660",
+    "email": "email1@yandex.ru",
+    "email2": "email2@yandex.ru",
+    "email3": "email3@yandex.ru",
+    "dayOfBirth": "1",
+    "monthOfBirth": "January",
+    "yearOfBirth": "1984"
+  },
+  {
+    "lastName": "LastName 1",
+    "firstName": "JSONFirstName 1",
+    "nickName": "Rock-n-Roll",
+    "companyName": "Yandex",
+    "address": "Address 1",
+    "homePhone": "4441",
+    "mobilePhone": "5551",
+    "workPhone": "6661",
+    "email": "email1@yandex.ru",
+    "email2": "email2@yandex.ru",
+    "email3": "email3@yandex.ru",
+    "dayOfBirth": "1",
+    "monthOfBirth": "January",
+    "yearOfBirth": "1984"
+  }
+]
