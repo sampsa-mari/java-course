@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 import ua.sampsa.addressbook.model.GroupData;
 import ua.sampsa.addressbook.model.Groups;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,13 +26,42 @@ public class GroupTests extends TestBase {
   }
 
   @DataProvider
-  public Iterator<Object[]> validGroups(){
+  public Iterator<Object[]> validGroups() throws IOException {
     List<Object[]> list = new ArrayList<Object[]>();
-    list.add(new Object[]{new GroupData().withName("GroupName - 1").withHeader("Header - 1").withFooter("Footer - 1")});
-    list.add(new Object[]{new GroupData().withName("GroupName - 2").withHeader("Header - 2").withFooter("Footer - 2")});
-    list.add(new Object[]{new GroupData().withName("GroupName - 3").withHeader("Header - 3").withFooter("Footer - 3")});
+    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/groups.csv")));
+    String line = reader.readLine();
+    while (line !=null){
+      String[] split = line.split(";");
+      list.add(new Object[]{new GroupData().withName(split[0]).withHeader(split[1]).withFooter( split[2])});
+      line = reader.readLine();
+    }
     return list.iterator();
   }
+  @DataProvider
+  public Iterator<Object[]> invalidGroups() throws IOException {
+    List<Object[]> list = new ArrayList<Object[]>();
+    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/invalid-groups.csv")));
+    String line = reader.readLine();
+    while (line !=null){
+      String[] split = line.split(";");
+      list.add(new Object[]{new GroupData().withName(split[0]).withHeader(split[1]).withFooter( split[2])});
+      line = reader.readLine();
+    }
+    return list.iterator();
+  }
+  @DataProvider
+  public Iterator<Object[]> editedGroups() throws IOException {
+    List<Object[]> list = new ArrayList<Object[]>();
+    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/edited-groups.csv")));
+    String line = reader.readLine();
+    while (line !=null){
+      String[] split = line.split(";");
+      list.add(new Object[]{new GroupData().withName(split[0]).withHeader(split[1]).withFooter( split[2])});
+      line = reader.readLine();
+    }
+    return list.iterator();
+  }
+
 
   @Test(dataProvider = "validGroups")
   public void testGroupCreation(GroupData newGroup) throws Exception {
@@ -42,17 +72,16 @@ public class GroupTests extends TestBase {
     assertThat(after, equalTo(before.withAdded(newGroup.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt()))));  // get Set 'after' with all Id`s, make stream from it, create stream of Id`s (mapToInt) and search max value
     }
 
-  @Test(enabled = false)
-  public void testBadNameGroupCreation() throws Exception {
+  @Test(dataProvider = "invalidGroups")
+  public void testBadNameGroupCreation(GroupData newGroup) throws Exception {
     Groups before = app.group().all();
-    GroupData newGroup = new GroupData().withName("newGroupsName'").withHeader( "newGroupsHeader").withFooter( "newGroupsFooter");
     app.group().create(newGroup);
     assertThat(app.group().count(), equalTo(before.size()));
     Groups after = app.group().all();
     assertThat(after, equalTo(before));
   }
 
-  @Test(enabled = false)
+  @Test//(dataProvider = "editedGroups")
   public void testGroupModification(){
     Groups before = app.group().all();
     GroupData randomEditedGroup = before.iterator().next(); // select from Set random group that will be modified. 'iterator()' iterates over the elements in Set sequentially and 'next()' returns random element from Set
@@ -63,7 +92,7 @@ public class GroupTests extends TestBase {
     assertThat(after, equalTo (before.without(randomEditedGroup).withAdded(modifiedGroup)));
   }
 
-  @Test(enabled = false)
+  @Test
   public void testGroupDeletion() throws Exception {
     Groups before = app.group().all();
     GroupData randomDeletedGroup = before.iterator().next();
