@@ -26,9 +26,9 @@ public class GroupTests extends TestBase {
   }
 
   @DataProvider
-  public Iterator<Object[]> validGroups() throws IOException {
+  public Iterator<Object[]> newValidGroups() throws IOException {
     List<Object[]> list = new ArrayList<Object[]>();
-    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/groups.csv")));
+    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/files/groups.csv")));
     String line = reader.readLine();
     while (line !=null){
       String[] split = line.split(";");
@@ -37,10 +37,11 @@ public class GroupTests extends TestBase {
     }
     return list.iterator();
   }
+
   @DataProvider
   public Iterator<Object[]> invalidGroups() throws IOException {
     List<Object[]> list = new ArrayList<Object[]>();
-    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/invalid-groups.csv")));
+    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/files/invalid-groups.csv")));
     String line = reader.readLine();
     while (line !=null){
       String[] split = line.split(";");
@@ -49,10 +50,11 @@ public class GroupTests extends TestBase {
     }
     return list.iterator();
   }
+
   @DataProvider
   public Iterator<Object[]> editedGroups() throws IOException {
     List<Object[]> list = new ArrayList<Object[]>();
-    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/edited-groups.csv")));
+    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/files/edited-groups.csv")));
     String line = reader.readLine();
     while (line !=null){
       String[] split = line.split(";");
@@ -62,8 +64,7 @@ public class GroupTests extends TestBase {
     return list.iterator();
   }
 
-
-  @Test(dataProvider = "validGroups")
+  @Test(dataProvider = "newValidGroups")
   public void testGroupCreation(GroupData newGroup) throws Exception {
     Groups before = app.group().all();
     app.group().create(newGroup);

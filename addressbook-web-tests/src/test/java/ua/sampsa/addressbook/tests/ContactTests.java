@@ -1,12 +1,19 @@
 package ua.sampsa.addressbook.tests;
 
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import ua.sampsa.addressbook.model.ContactData;
 import ua.sampsa.addressbook.model.Contacts;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -18,7 +25,7 @@ public class ContactTests extends TestBase {
   public void ensurePreconditions_atLeastOneContactIsPresent(){
     if(app.contact().all().size() == 0){
       app.goTo().addNewPage();
-      File photo = new File("src/test/resources/Mila.png");
+      File photo = new File("src/test/resources/files/Mila.png");
       app.contact().create(new ContactData()
               .withFirstName("Vasya")
               .withMiddleName("Olegovich")
@@ -41,29 +48,42 @@ public class ContactTests extends TestBase {
     }
   }
 
-  @Test(enabled = true)
-  public void testNewContact() throws Exception {
+  @DataProvider
+  public Iterator<Object[]> newValidContacts() throws IOException {
+    List<Object[]> list = new ArrayList<Object[]>();
+    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/files/contacts.csv")));
+    String line = reader.readLine();
+    while (line !=null){
+      String[] split = line.split(";");
+      list.add(new Object[]{new ContactData().withFirstName(split[0]).withLastName(split[1]).withAddress(split[2])
+              .withNickName(split[3]).withCompanyName(split[4]).withHomePhone(split[5])
+              .withMobilePhone(split[6]).withWorkPhone(split[7]).withEmail(split[8])
+              .withEmail2(split[9]).withEmail3(split[10]).withDayOfBirth(split[11]).withMonthOfBirth(split[12]).withYearOfBirth(split[13])});
+      line = reader.readLine();
+    }
+    return list.iterator();
+  }
+
+  @DataProvider
+  public Iterator<Object[]> invalidContacts() throws IOException {
+    List<Object[]> list = new ArrayList<Object[]>();
+    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/files/invalid-contacts.csv")));
+    String line = reader.readLine();
+    while (line !=null){
+      String[] split = line.split(";");
+      list.add(new Object[]{new ContactData().withFirstName(split[0]).withLastName(split[1]).withAddress(split[2])
+              .withNickName(split[3]).withCompanyName(split[4]).withHomePhone(split[5])
+              .withMobilePhone(split[6]).withWorkPhone(split[7]).withEmail(split[8])
+              .withEmail2(split[9]).withEmail3(split[10]).withDayOfBirth(split[11]).withMonthOfBirth(split[12]).withYearOfBirth(split[13])});
+      line = reader.readLine();
+    }
+    return list.iterator();
+  }
+
+  @Test(dataProvider = "newValidContacts")
+  public void testNewContactWithoutPhoto(ContactData newContact) throws Exception {
     Contacts beforeNewContactAdded = app.contact().all();
     app.goTo().addNewPage();
-     File photo = new File("src/test/resources/Mila.png");
-     ContactData newContact = new ContactData()
-             .withFirstName("Vasya")
-             .withMiddleName("Olegovich")
-             .withLastName("Pupkin")
-             .withNickName("Rock-n-Roll")
-             .withCompanyName("Yandex")
-             .withAddress("Pobedy Street, 25")
-             .withHomePhone("444")
-             .withMobilePhone("555")
-             .withWorkPhone("666")
-             .withEmail("email1@yandex.ru")
-             .withEmail2("email2@yandex.ru")
-             .withEmail3("email3@yandex.ru")
-             .withDayOfBirth("1")
-             .withMonthOfBirth("January")
-             .withYearOfBirth("1987")
-             .withPhoto(photo);
-
     app.contact().create(newContact);
     app.contact().returnToHomePage();
     assertThat(app.contact().count(), equalTo(beforeNewContactAdded.size() + 1));
@@ -71,22 +91,13 @@ public class ContactTests extends TestBase {
     assertThat(afterNewContactAdded, equalTo(beforeNewContactAdded.withAdded(newContact.withId(afterNewContactAdded.stream().mapToInt((c) -> c.getId()).max().getAsInt()))));
   }
 
-  //Test to identify path to file and existence of the file
-  @Test(enabled = false)
-  public void testCurrentDir(){
-    File currentDir = new File(".");
-    System.out.println(currentDir.getAbsolutePath());
-    File photo = new File("src/test/resources/Mila.png");
-    System.out.println(photo.getAbsolutePath());
-    System.out.println(photo.exists());
-  }
-
-  @Test(enabled = false)
-  public void testBadNameContact() throws Exception {
+  @Test(enabled = true)
+  public void testNewContactWithPhoto() throws Exception {
     Contacts beforeNewContactAdded = app.contact().all();
     app.goTo().addNewPage();
+    File photo = new File("src/test/resources/files/Mila.png");
     ContactData newContact = new ContactData()
-            .withFirstName("Vasya1'")
+            .withFirstName("Vasya")
             .withMiddleName("Olegovich")
             .withLastName("Pupkin")
             .withNickName("Rock-n-Roll")
@@ -99,8 +110,32 @@ public class ContactTests extends TestBase {
             .withEmail2("email2@yandex.ru")
             .withEmail3("email3@yandex.ru")
             .withDayOfBirth("1")
-            .withMonthOfBirth( "January")
-            .withYearOfBirth("1987");
+            .withMonthOfBirth("January")
+            .withYearOfBirth("1987")
+            .withPhoto(photo);
+
+    app.contact().create(newContact);
+    app.contact().returnToHomePage();
+    assertThat(app.contact().count(), equalTo(beforeNewContactAdded.size() + 1));
+    Contacts afterNewContactAdded = app.contact().all();
+    assertThat(afterNewContactAdded, equalTo(beforeNewContactAdded.withAdded(newContact.withId(afterNewContactAdded.stream().mapToInt((c) -> c.getId()).max().getAsInt()))));
+  }
+
+//  Test to identify path to file and existence of the file
+
+//  @Test(enabled = true)
+//  public void testCurrentDir(){
+//    File currentDir = new File(".");
+//    System.out.println(currentDir.getAbsolutePath());
+//    File photo = new File("src/test/resources/files/Mila.png");
+//    System.out.println(photo.getAbsolutePath());
+//    System.out.println(photo.exists());
+//  }
+
+  @Test(dataProvider = "invalidContacts")
+  public void testBadNameContact(ContactData newContact) throws Exception {
+    Contacts beforeNewContactAdded = app.contact().all();
+    app.goTo().addNewPage();
     app.contact().create(newContact);
     app.contact().returnToHomePage();
     assertThat(app.contact().count(), equalTo(beforeNewContactAdded.size()));
@@ -112,7 +147,7 @@ public class ContactTests extends TestBase {
   public void testEditContact(){
     Contacts beforeContactModification = app.contact().all();
     ContactData randomEditedContact = beforeContactModification.iterator().next(); // select from Set random contact that will be modified. 'iterator()' iterates over the elements in Set sequentially and 'next()' returns random element from Set
-    File photo = new File("src/test/resources/edited.jpg");
+    File photo = new File("src/test/resources/files/edited.jpg");
     ContactData modifiedContact = new ContactData()
             .withId(randomEditedContact.getId())
             .withFirstName("Gena")
@@ -139,7 +174,7 @@ public class ContactTests extends TestBase {
     assertThat(afterContactModification, equalTo(beforeContactModification.without(randomEditedContact).withAdded(modifiedContact)));
   }
 
-  @Test(enabled = false)
+  @Test(enabled = true)
   public void testDeleteContact(){
     Contacts beforeDeletion = app.contact().all();
     ContactData randomDeletedContact = beforeDeletion.iterator().next(); // 'iterator()' iterates over the elements in Set sequentially and 'next()' returns random element from Set
@@ -149,7 +184,7 @@ public class ContactTests extends TestBase {
     assertThat(afterDeletion, equalTo(beforeDeletion.without(randomDeletedContact)));
   }
 
-  @Test(enabled = false)
+  @Test(enabled = true)
   public void testContactsPhones(){
     ContactData selectContactForModification = app.contact().all().iterator().next();
     ContactData contactInfoFromEditForm = app.contact().infoFromEditForm(selectContactForModification);
@@ -168,14 +203,14 @@ public class ContactTests extends TestBase {
   public static String cleaned(String phone){ return phone.replaceAll("\\s", "").replaceAll("[-()]", ""); }
 
 
-  @Test(enabled = false)
+  @Test(enabled = true)
   public void testPostAddress(){
     ContactData selectContactForModification = app.contact().all().iterator().next();
     ContactData contactInfoFromEditForm = app.contact().infoFromEditForm(selectContactForModification);
     assertThat(selectContactForModification.getAddress(), equalTo(contactInfoFromEditForm.getAddress()));
   }
 
-  @Test(enabled = false)
+  @Test(enabled = true)
   public void testEMails(){
     ContactData selectContactForModification = app.contact().all().iterator().next();
     ContactData contactInfoFromEditForm = app.contact().infoFromEditForm(selectContactForModification);

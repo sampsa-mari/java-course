@@ -46,7 +46,10 @@ public class ContactDataGenerator {
 
     Writer writer = new FileWriter(file);
     for(ContactData contact : contacts){
-      writer.write(String.format("%s;%s;%s\n", contact.getFirstName(), contact.getLastName(), contact.getAddress()));
+      writer.write(String.format("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",
+              contact.getFirstName(), contact.getLastName(), contact.getAddress(), contact.getNickName(), contact.getCompanyName(),
+              contact.getHomePhone(), contact.getMobilePhone(), contact.getWorkPhone(), contact.getEmail(), contact.getEmail2(), contact.getEmail3(),
+              contact.getDayOfBirth(), contact.getMonthOfBirth(), contact.getYearOfBirth()));
     }
     writer.close();
   }
@@ -57,7 +60,18 @@ public class ContactDataGenerator {
       contacts.add(new ContactData()
               .withFirstName(String.format("FirstName %s", i))
               .withLastName(String.format("LastName %s", i))
-              .withAddress(String.format("Address %s", i)));
+              .withAddress(String.format("Address %s", i))
+              .withNickName(String.format("Rock-n-Roll"))
+              .withCompanyName(String.format("Yandex"))
+              .withHomePhone(String.format("444%s", i))
+              .withMobilePhone(String.format("555%s", i))
+              .withWorkPhone(String.format("666%s", i))
+              .withEmail(String.format("email1@yandex.ru"))
+              .withEmail2(String.format("email2@yandex.ru"))
+              .withEmail3(String.format("email3@yandex.ru"))
+              .withDayOfBirth(String.format("1"))
+              .withMonthOfBirth(String.format("January"))
+              .withYearOfBirth(String.format("1984")));
     }
     return contacts;
   }
