@@ -1,5 +1,6 @@
 package ua.sampsa.addressbook.tests;
 
+import com.thoughtworks.xstream.XStream;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -49,7 +50,7 @@ public class ContactTests extends TestBase {
   }
 
   @DataProvider
-  public Iterator<Object[]> newValidContacts() throws IOException {
+  public Iterator<Object[]> newValidContactsFromCSV() throws IOException {
     List<Object[]> list = new ArrayList<Object[]>();
     BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/files/contacts.csv")));
     String line = reader.readLine();
@@ -62,6 +63,21 @@ public class ContactTests extends TestBase {
       line = reader.readLine();
     }
     return list.iterator();
+  }
+
+  @DataProvider
+  public Iterator<Object[]> newValidContactsFromXML() throws IOException {
+    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/files/contacts.xml")));
+    String xml = "";
+    String line = reader.readLine();
+    while (line !=null){
+      xml += line;
+      line = reader.readLine();
+    }
+    XStream xstream = new XStream();
+    xstream.processAnnotations(ContactData.class);
+    List<ContactData> contacts = (List<ContactData>) xstream.fromXML(xml);
+    return contacts.stream().map((g) -> new Object[] {g}).collect(Collectors.toList()).iterator();
   }
 
   @DataProvider
@@ -80,7 +96,7 @@ public class ContactTests extends TestBase {
     return list.iterator();
   }
 
-  @Test(dataProvider = "newValidContacts")
+  @Test(dataProvider = "newValidContactsFromXML")
   public void testNewContactWithoutPhoto(ContactData newContact) throws Exception {
     Contacts beforeNewContactAdded = app.contact().all();
     app.goTo().addNewPage();

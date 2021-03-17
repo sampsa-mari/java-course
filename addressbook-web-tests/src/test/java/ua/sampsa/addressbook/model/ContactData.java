@@ -1,11 +1,14 @@
 package ua.sampsa.addressbook.model;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
 import java.io.File;
 
-/**
- * Created by Maryna Tkachuk on 15.12.20.
- */
+@XStreamAlias("contact")
+
 public class ContactData {
+    @XStreamOmitField
     private int id = 0;
     private String lastName;
     private String middleName;
