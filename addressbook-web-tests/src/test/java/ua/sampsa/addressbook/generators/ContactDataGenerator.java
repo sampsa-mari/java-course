@@ -1,5 +1,8 @@
 package ua.sampsa.addressbook.generators;
 
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
 import ua.sampsa.addressbook.model.ContactData;
 
 import java.io.File;
@@ -13,19 +16,32 @@ import java.util.List;
  * Created by Maryna Tkachuk on 17.03.21.
  */
 public class ContactDataGenerator {
+
+  @Parameter(names = "-c", description = "Contact count")
+  public int count;
+
+  @Parameter(names = "-f", description = "Target file")
+  public String file;
+
+
   public static void main(String[] args) throws IOException {
-
-    //Number of Groups
-    int count = Integer.parseInt(args[0]);
-
-    //Path to file
-    File file = new File(args[1]);
-
-    List<ContactData> contact = generateContacts(count);
-    save(contact, file);
+    ContactDataGenerator generator = new ContactDataGenerator();
+    JCommander jCommander = new JCommander(generator);
+    try {
+      jCommander.parse(args);
+    } catch (ParameterException ex) {
+      jCommander.usage();
+      return;
+    }
+    generator.run();
   }
 
-  private static void save(List<ContactData> contacts, File file) throws IOException {
+  private void run() throws IOException {
+    List<ContactData> contact = generateContacts(count);
+    save(contact, new File(file));
+  }
+
+  private void save(List<ContactData> contacts, File file) throws IOException {
     System.out.println(new File(".").getAbsolutePath());
 
     Writer writer = new FileWriter(file);
@@ -33,7 +49,6 @@ public class ContactDataGenerator {
       writer.write(String.format("%s;%s;%s\n", contact.getFirstName(), contact.getLastName(), contact.getAddress()));
     }
     writer.close();
-
   }
 
   private static List<ContactData> generateContacts(int count) {
