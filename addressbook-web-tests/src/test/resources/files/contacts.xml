@@ -1,7 +1,7 @@
 <list>
   <contact>
     <lastName>XMLLastName 0</lastName>
-    <firstName>FirstName 0</firstName>
+    <firstName>XMLFirstName 0</firstName>
     <nickName>Rock-n-Roll</nickName>
     <companyName>Yandex</companyName>
     <address>Address 0</address>
@@ -17,29 +17,13 @@
   </contact>
   <contact>
     <lastName>XMLLastName 1</lastName>
-    <firstName>FirstName 1</firstName>
+    <firstName>XMLFirstName 1</firstName>
     <nickName>Rock-n-Roll</nickName>
     <companyName>Yandex</companyName>
     <address>Address 1</address>
     <homePhone>4441</homePhone>
     <mobilePhone>5551</mobilePhone>
     <workPhone>6661</workPhone>
-    <email>email1@yandex.ru</email>
-    <email2>email2@yandex.ru</email2>
-    <email3>email3@yandex.ru</email3>
-    <dayOfBirth>1</dayOfBirth>
-    <monthOfBirth>January</monthOfBirth>
-    <yearOfBirth>1984</yearOfBirth>
-  </contact>
-  <contact>
-    <lastName>XMLLastName 2</lastName>
-    <firstName>FirstName 2</firstName>
-    <nickName>Rock-n-Roll</nickName>
-    <companyName>Yandex</companyName>
-    <address>Address 2</address>
-    <homePhone>4442</homePhone>
-    <mobilePhone>5552</mobilePhone>
-    <workPhone>6662</workPhone>
     <email>email1@yandex.ru</email>
     <email2>email2@yandex.ru</email2>
     <email3>email3@yandex.ru</email3>
