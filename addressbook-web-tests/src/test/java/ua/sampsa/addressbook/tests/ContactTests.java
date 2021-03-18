@@ -28,7 +28,7 @@ public class ContactTests extends TestBase {
   public void ensurePreconditions_atLeastOneContactIsPresent(){
     if(app.contact().all().size() == 0){
       app.goTo().addNewPage();
-      File photo = new File("src/test/resources/files/Mila.png");
+      File photo = new File("src/test/resources/dataFiles/Mila.png");
       app.contact().create(new ContactData()
               .withFirstName("Vasya")
               .withMiddleName("Olegovich")
@@ -54,7 +54,7 @@ public class ContactTests extends TestBase {
   @DataProvider
   public Iterator<Object[]> newValidContactsFromCSV() throws IOException {
     List<Object[]> list = new ArrayList<Object[]>();
-    try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/files/contacts.csv")))){
+    try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/dataFiles/contacts/contacts.csv")))){
       String line = reader.readLine();
       while (line !=null){
         String[] split = line.split(";");
@@ -70,7 +70,7 @@ public class ContactTests extends TestBase {
 
   @DataProvider
   public Iterator<Object[]> newValidContactsFromXML() throws IOException {
-    try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/files/contacts.xml")))){
+    try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/dataFiles/contacts/contacts.xml")))){
       String xml = "";
       String line = reader.readLine();
       while (line !=null){
@@ -86,7 +86,7 @@ public class ContactTests extends TestBase {
 
   @DataProvider
   public Iterator<Object[]> newValidContactsFromJSON() throws IOException {
-    try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/files/contacts.json")))){
+    try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/dataFiles/contacts/contacts.json")))){
       String json = "";
       String line = reader.readLine();
       while (line !=null){
@@ -102,7 +102,7 @@ public class ContactTests extends TestBase {
   @DataProvider
   public Iterator<Object[]> invalidContacts() throws IOException {
     List<Object[]> list = new ArrayList<Object[]>();
-    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/files/invalid-contacts.csv")));
+    BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/dataFiles/contacts/invalid-contacts.csv")));
     String line = reader.readLine();
     while (line !=null){
       String[] split = line.split(";");
@@ -115,7 +115,7 @@ public class ContactTests extends TestBase {
     return list.iterator();
   }
 
-  @Test(dataProvider = "newValidContactsFromJSON")
+  @Test(dataProvider = "newValidContactsFromCSV")
   public void testNewContactWithoutPhoto(ContactData newContact) throws Exception {
     Contacts beforeNewContactAdded = app.contact().all();
     app.goTo().addNewPage();
@@ -130,7 +130,7 @@ public class ContactTests extends TestBase {
   public void testNewContactWithPhoto() throws Exception {
     Contacts beforeNewContactAdded = app.contact().all();
     app.goTo().addNewPage();
-    File photo = new File("src/test/resources/files/Mila.png");
+    File photo = new File("src/test/resources/dataFiles/Mila.png");
     ContactData newContact = new ContactData()
             .withFirstName("Vasya")
             .withMiddleName("Olegovich")
@@ -182,7 +182,7 @@ public class ContactTests extends TestBase {
   public void testEditContact(){
     Contacts beforeContactModification = app.contact().all();
     ContactData randomEditedContact = beforeContactModification.iterator().next(); // select from Set random contact that will be modified. 'iterator()' iterates over the elements in Set sequentially and 'next()' returns random element from Set
-    File photo = new File("src/test/resources/files/edited.jpg");
+    File photo = new File("src/test/resources/dataFiles/edited.jpg");
     ContactData modifiedContact = new ContactData()
             .withId(randomEditedContact.getId())
             .withFirstName("Gena")
