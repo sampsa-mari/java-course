@@ -1,0 +1,17 @@
+[
+  {
+    "name": "JSONNewGroupName 0",
+    "header": "NewGroupHeader 0",
+    "footer": "NewGroupFooter 0"
+  },
+  {
+    "name": "JSONNewGroupName 1",
+    "header": "NewGroupHeader 1",
+    "footer": "NewGroupFooter 1"
+  },
+  {
+    "name": "JSONNewGroupName 2",
+    "header": "NewGroupHeader 2",
+    "footer": "NewGroupFooter 2"
+  }
+]

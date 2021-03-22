@@ -3,49 +3,100 @@ package ua.sampsa.addressbook.model;
 import com.google.gson.annotations.Expose;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.*;
 import java.io.File;
 
 @XStreamAlias("contact")
-
+@Entity
+@Table(name = "addressbook")
 public class ContactData {
   @XStreamOmitField
+  @Id
+  @Column(name = "id")
   private int id = 0;
   @Expose
+  @Column(name = "lastname")
   private String lastName;
+
+  @Column(name = "middlename")
   private String middleName;
+
   @Expose
+  @Column(name = "firstname")
   private String firstName;
+
   @Expose
+  @Column(name = "nickname")
   private String nickName;
+
+  @Transient
+  private String group;
+
   @Expose
+  @Column(name = "company")
   private String companyName;
+
   @Expose
+  @Type(type = "text")
+  @Column(name = "address")
   private String address;
+
   @Expose
+  @Column(name = "home")
+  @Type(type = "text")
   private String homePhone;
+
   @Expose
+  @Column(name = "mobile")
+  @Type(type = "text")
   private String mobilePhone;
+
   @Expose
+  @Column(name = "work")
+  @Type(type = "text")
   private String workPhone;
+
+  @Transient
   private String allEMails;
+
   @Expose
+  @Column(name = "email")
+  @Type(type = "text")
   private String email;
+
   @Expose
+  @Column(name = "email2")
+  @Type(type = "text")
   private String email2;
+
   @Expose
+  @Column(name = "email3")
+  @Type(type = "text")
   private String email3;
+
   @Expose
+  @Column(name = "bday", columnDefinition = "TINYINT")
   private String dayOfBirth;
+
   @Expose
+  @Column(name = "bmonth")
   private String monthOfBirth;
+
   @Expose
+  @Column(name = "byear")
   private String yearOfBirth;
+
+  @Transient
   private String allPhones;
-  private File photo;
+
+  @Column(name = "photo")
+  @Type(type = "text")
+  private String photo;
 
   public ContactData withPhoto(File photo) {
-    this.photo = photo;
+    this.photo = photo.getPath();
     return this;
   }
 
@@ -76,6 +127,11 @@ public class ContactData {
 
   public ContactData withNickName(String nickName) {
     this.nickName = nickName;
+    return this;
+  }
+
+  public ContactData group(String nickName) {
+    this.nickName = group;
     return this;
   }
 
@@ -157,6 +213,10 @@ public class ContactData {
       return nickName;
     }
 
+    public String group() {
+    return group;
+  }
+
     public String getCompanyName() {
       return companyName;
     }
@@ -195,7 +255,7 @@ public class ContactData {
       return yearOfBirth;
     }
 
-    public File getPhoto() { return photo; }
+    public File getPhoto() { return new File (photo); }
 
 
   @Override
