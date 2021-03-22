@@ -30,7 +30,6 @@ public class DbConnectionTests {
 
       System.out.println(groups);
 
-
     } catch (SQLException ex) {
       // handle any errors
       System.out.println("SQLException: " + ex.getMessage());
@@ -38,4 +37,5 @@ public class DbConnectionTests {
       System.out.println("VendorError: " + ex.getErrorCode());
     }
   }
+
 }
