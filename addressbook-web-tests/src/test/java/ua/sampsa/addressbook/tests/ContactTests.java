@@ -26,7 +26,7 @@ public class ContactTests extends TestBase {
 
   @BeforeMethod
   public void ensurePreconditions_atLeastOneContactIsPresent(){
-    if(app.contact().all().size() == 0){
+    if(app.db().contacts().size() == 0){
       app.goTo().addNewPage();
       File photo = new File("src/test/resources/dataFiles/Mila.png");
       app.contact().create(new ContactData()
@@ -46,7 +46,6 @@ public class ContactTests extends TestBase {
               .withMonthOfBirth( "January")
               .withYearOfBirth("1987")
               .withPhoto(photo));
-
       app.contact().returnToHomePage();
     }
   }
@@ -117,38 +116,39 @@ public class ContactTests extends TestBase {
 
   @Test(dataProvider = "newValidContactsFromXML")
   public void testNewContactWithPhotoXML(ContactData newContact) throws Exception {
-    Contacts beforeNewContactAdded = app.contact().all();
+    Contacts beforeNewContactAdded = app.db().contacts();
     app.goTo().addNewPage();
     app.contact().create(newContact);
     app.contact().returnToHomePage();
     assertThat(app.contact().count(), equalTo(beforeNewContactAdded.size() + 1));
-    Contacts afterNewContactAdded = app.contact().all();
+    Contacts afterNewContactAdded = app.db().contacts();
     assertThat(afterNewContactAdded, equalTo(beforeNewContactAdded.withAdded(newContact.withId(afterNewContactAdded.stream().mapToInt((c) -> c.getId()).max().getAsInt()))));
   }
 
   @Test(dataProvider = "newValidContactsFromCSV")
   public void testNewContactWithPhotoCSV(ContactData newContact) throws Exception {
-    Contacts beforeNewContactAdded = app.contact().all();
+    Contacts beforeNewContactAdded = app.db().contacts();
     app.goTo().addNewPage();
     app.contact().create(newContact);
     app.contact().returnToHomePage();
     assertThat(app.contact().count(), equalTo(beforeNewContactAdded.size() + 1));
-    Contacts afterNewContactAdded = app.contact().all();
+    Contacts afterNewContactAdded = app.db().contacts();
     assertThat(afterNewContactAdded, equalTo(beforeNewContactAdded.withAdded(newContact.withId(afterNewContactAdded.stream().mapToInt((c) -> c.getId()).max().getAsInt()))));
   }
   @Test(dataProvider = "newValidContactsFromJSON")
   public void testNewContactWithoutPhotoJSON(ContactData newContact) throws Exception {
-    Contacts beforeNewContactAdded = app.contact().all();
+    Contacts beforeNewContactAdded = app.db().contacts();
     app.goTo().addNewPage();
     app.contact().create(newContact);
     app.contact().returnToHomePage();
     assertThat(app.contact().count(), equalTo(beforeNewContactAdded.size() + 1));
-    Contacts afterNewContactAdded = app.contact().all();
+    Contacts afterNewContactAdded = app.db().contacts();
     assertThat(afterNewContactAdded, equalTo(beforeNewContactAdded.withAdded(newContact.withId(afterNewContactAdded.stream().mapToInt((c) -> c.getId()).max().getAsInt()))));
   }
+
   @Test(enabled = true)
   public void testNewContactWithPhoto() throws Exception {
-    Contacts beforeNewContactAdded = app.contact().all();
+    Contacts beforeNewContactAdded = app.db().contacts();
     app.goTo().addNewPage();
     File photo = new File("src/test/resources/dataFiles/Mila.png");
     ContactData newContact = new ContactData()
@@ -168,11 +168,10 @@ public class ContactTests extends TestBase {
             .withMonthOfBirth("January")
             .withYearOfBirth("1987")
             .withPhoto(photo);
-
     app.contact().create(newContact);
     app.contact().returnToHomePage();
     assertThat(app.contact().count(), equalTo(beforeNewContactAdded.size() + 1));
-    Contacts afterNewContactAdded = app.contact().all();
+    Contacts afterNewContactAdded = app.db().contacts();
     assertThat(afterNewContactAdded, equalTo(beforeNewContactAdded.withAdded(newContact.withId(afterNewContactAdded.stream().mapToInt((c) -> c.getId()).max().getAsInt()))));
   }
 
@@ -189,18 +188,18 @@ public class ContactTests extends TestBase {
 
   @Test(dataProvider = "invalidContacts")
   public void testBadNameContact(ContactData newContact) throws Exception {
-    Contacts beforeNewContactAdded = app.contact().all();
+    Contacts beforeNewContactAdded = app.db().contacts();
     app.goTo().addNewPage();
     app.contact().create(newContact);
     app.contact().returnToHomePage();
     assertThat(app.contact().count(), equalTo(beforeNewContactAdded.size()));
-    Contacts afterNewContactAdded = app.contact().all();
+    Contacts afterNewContactAdded = app.db().contacts();
     assertThat(afterNewContactAdded, equalTo(beforeNewContactAdded));
   }
 
   @Test(enabled = true)
   public void testEditContact(){
-    Contacts beforeContactModification = app.contact().all();
+    Contacts beforeContactModification = app.db().contacts();
     ContactData randomEditedContact = beforeContactModification.iterator().next(); // select from Set random contact that will be modified. 'iterator()' iterates over the elements in Set sequentially and 'next()' returns random element from Set
     File photo = new File("src/test/resources/dataFiles/edited.jpg");
     ContactData modifiedContact = new ContactData()
@@ -220,22 +219,20 @@ public class ContactTests extends TestBase {
             .withDayOfBirth("3")
             .withMonthOfBirth("March")
             .withYearOfBirth("1997")
-            .withPhoto(photo);;
-
-
+            .withPhoto(photo);
     app.contact().modifyById(modifiedContact);
     assertThat(app.contact().count(), equalTo(beforeContactModification.size()));
-    Contacts afterContactModification = app.contact().all();
+    Contacts afterContactModification = app.db().contacts();
     assertThat(afterContactModification, equalTo(beforeContactModification.without(randomEditedContact).withAdded(modifiedContact)));
   }
 
   @Test(enabled = true)
   public void testDeleteContact(){
-    Contacts beforeDeletion = app.contact().all();
+    Contacts beforeDeletion = app.db().contacts();
     ContactData randomDeletedContact = beforeDeletion.iterator().next(); // 'iterator()' iterates over the elements in Set sequentially and 'next()' returns random element from Set
     app.contact().deleteById(randomDeletedContact);
     assertThat(app.contact().count(), equalTo(beforeDeletion.size() - 1));
-    Contacts afterDeletion = app.contact().all();
+    Contacts afterDeletion = app.db().contacts();
     assertThat(afterDeletion, equalTo(beforeDeletion.without(randomDeletedContact)));
   }
 
@@ -247,7 +244,6 @@ public class ContactTests extends TestBase {
     assertThat(selectContactForModification.getAllPhones(), equalTo(mergePhones(contactInfoFromEditForm)));
 
   }
-
   private String mergePhones(ContactData contactInfoFromEditForm) {
     return Arrays.asList(contactInfoFromEditForm.getHomePhone(), contactInfoFromEditForm.getMobilePhone(),contactInfoFromEditForm.getWorkPhone())
             .stream().filter((s) -> !s.equals(""))

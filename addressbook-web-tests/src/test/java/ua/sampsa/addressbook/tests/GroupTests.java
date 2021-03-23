@@ -25,8 +25,8 @@ public class GroupTests extends TestBase {
 
   @BeforeMethod
   public void ensurePreconditions_atLeastOneGroupIsPresent(){
-    app.goTo().groupPage();
-    if(app.group().all().size() == 0){
+    if (app.db().groups().size() == 0){
+      app.goTo().groupPage();
       app.group().create(new GroupData().withName("newGroupsName").withHeader( "newGroupsHeader").withFooter( "newGroupsFooter"));
     }
   }
@@ -104,40 +104,44 @@ public class GroupTests extends TestBase {
 
   @Test(dataProvider = "newValidGroupsFromCSV")
   public void testGroupCreation(GroupData newGroup) throws Exception {
-    Groups before = app.group().all();
+    Groups before = app.db().groups();
+    app.goTo().groupPage();
     app.group().create(newGroup);
     assertThat(app.group().count(), equalTo(before.size() + 1));
-    Groups after = app.group().all();
+    Groups after = app.db().groups();
     assertThat(after, equalTo(before.withAdded(newGroup.withId(after.stream().mapToInt((g) -> g.getId()).max().getAsInt()))));  // get Set 'after' with all Id`s, make stream from it, create stream of Id`s (mapToInt) and search max value
   }
 
   @Test(dataProvider = "invalidGroups")
   public void testBadNameGroupCreation(GroupData newGroup) throws Exception {
-    Groups before = app.group().all();
+    Groups before = app.db().groups();
+    app.goTo().groupPage();
     app.group().create(newGroup);
     assertThat(app.group().count(), equalTo(before.size()));
-    Groups after = app.group().all();
+    Groups after = app.db().groups();
     assertThat(after, equalTo(before));
   }
 
   @Test//(dataProvider = "editedGroups")
   public void testGroupModification(){
-    Groups before = app.group().all();
+    Groups before = app.db().groups();
     GroupData randomEditedGroup = before.iterator().next(); // select from Set random group that will be modified. 'iterator()' iterates over the elements in Set sequentially and 'next()' returns random element from Set
     GroupData modifiedGroup = new GroupData().withId(randomEditedGroup.getId()).withName("GroupRename").withHeader("HeaderRename").withFooter("FooterRename"); // take id from object above
+    app.goTo().groupPage();
     app.group().modify(modifiedGroup);
     assertThat(app.group().count(), equalTo( before.size()));
-    Groups after = app.group().all();
+    Groups after = app.db().groups();
     assertThat(after, equalTo (before.without(randomEditedGroup).withAdded(modifiedGroup)));
   }
 
   @Test
   public void testGroupDeletion() throws Exception {
-    Groups before = app.group().all();
+    Groups before = app.db().groups();
     GroupData randomDeletedGroup = before.iterator().next();
+    app.goTo().groupPage();
     app.group().delete(randomDeletedGroup);
     assertThat(app.group().count(), equalTo(before.size() - 1));
-    Groups after = app.group().all();
+    Groups after = app.db().groups();
     assertThat(after, equalTo (before.without(randomDeletedGroup)));
   }
 }
