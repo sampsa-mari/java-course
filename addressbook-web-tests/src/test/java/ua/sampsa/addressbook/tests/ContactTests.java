@@ -210,7 +210,7 @@ public class ContactTests extends TestBase {
             .withLastName("Olennikof")
             .withNickName("ohne")
             .withCompanyName("mzilla")
-           // .withAddress("MinskerStreet, 25")
+            .withAddress("MinskerStreet, 25")
             .withHomePhone("888777")
             .withMobilePhone("888888")
             .withWorkPhone("888999")
