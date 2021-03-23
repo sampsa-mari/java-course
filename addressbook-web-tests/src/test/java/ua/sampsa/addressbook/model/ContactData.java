@@ -16,6 +16,28 @@ public class ContactData {
   @Id
   @Column(name = "id")
   private int id = 0;
+
+  @Override
+  public String toString() {
+    return "ContactData{" +
+            "id=" + id +
+            ", lastName='" + lastName + '\'' +
+            ", firstName='" + firstName + '\'' +
+            ", nickName='" + nickName + '\'' +
+            ", companyName='" + companyName + '\'' +
+            ", address='" + address + '\'' +
+            ", homePhone='" + homePhone + '\'' +
+            ", mobilePhone='" + mobilePhone + '\'' +
+            ", workPhone='" + workPhone + '\'' +
+            ", email='" + email + '\'' +
+            ", email2='" + email2 + '\'' +
+            ", email3='" + email3 + '\'' +
+            ", dayOfBirth='" + dayOfBirth + '\'' +
+            ", monthOfBirth='" + monthOfBirth + '\'' +
+            ", yearOfBirth='" + yearOfBirth + '\'' +
+            '}';
+  }
+
   @Expose
   @Column(name = "lastname")
   private String lastName;
@@ -91,8 +113,7 @@ public class ContactData {
   @Transient
   private String allPhones;
 
-  @Column(name = "photo")
-  @Type(type = "text")
+  @Column(name = "photo",columnDefinition = "mediumtext")
   private String photo;
 
   public ContactData withPhoto(File photo) {
@@ -255,17 +276,13 @@ public class ContactData {
       return yearOfBirth;
     }
 
-    public File getPhoto() { return new File (photo); }
+    public File getPhoto() {
+      if (photo == null) {
+        return null;
+      } else {
+        return new File(photo);
+      } }
 
-
-  @Override
-  public String toString() {
-    return "ContactData{" +
-            "id='" + id + '\'' +
-            ", firstName='" + firstName + '\'' +
-            ", lastName='" + lastName + '\'' +
-            '}';
-  }
 
   @Override
   public boolean equals(Object o) {

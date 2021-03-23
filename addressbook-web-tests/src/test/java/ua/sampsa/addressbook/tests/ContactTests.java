@@ -61,7 +61,7 @@ public class ContactTests extends TestBase {
         list.add(new Object[]{new ContactData().withFirstName(split[0]).withLastName(split[1]).withAddress(split[2])
                 .withNickName(split[3]).withCompanyName(split[4]).withHomePhone(split[5])
                 .withMobilePhone(split[6]).withWorkPhone(split[7]).withEmail(split[8])
-                .withEmail2(split[9]).withEmail3(split[10]).withDayOfBirth(split[11]).withMonthOfBirth(split[12]).withYearOfBirth(split[13])});
+                .withEmail2(split[9]).withEmail3(split[10]).withDayOfBirth(split[11]).withMonthOfBirth(split[12]).withYearOfBirth(split[13]).withPhoto(new File(split[14]))});
         line = reader.readLine();
       }
       return list.iterator();
@@ -115,8 +115,8 @@ public class ContactTests extends TestBase {
     return list.iterator();
   }
 
-  @Test(dataProvider = "newValidContactsFromCSV")
-  public void testNewContactWithoutPhoto(ContactData newContact) throws Exception {
+  @Test(dataProvider = "newValidContactsFromXML")
+  public void testNewContactWithPhotoXML(ContactData newContact) throws Exception {
     Contacts beforeNewContactAdded = app.contact().all();
     app.goTo().addNewPage();
     app.contact().create(newContact);
@@ -126,6 +126,26 @@ public class ContactTests extends TestBase {
     assertThat(afterNewContactAdded, equalTo(beforeNewContactAdded.withAdded(newContact.withId(afterNewContactAdded.stream().mapToInt((c) -> c.getId()).max().getAsInt()))));
   }
 
+  @Test(dataProvider = "newValidContactsFromCSV")
+  public void testNewContactWithPhotoCSV(ContactData newContact) throws Exception {
+    Contacts beforeNewContactAdded = app.contact().all();
+    app.goTo().addNewPage();
+    app.contact().create(newContact);
+    app.contact().returnToHomePage();
+    assertThat(app.contact().count(), equalTo(beforeNewContactAdded.size() + 1));
+    Contacts afterNewContactAdded = app.contact().all();
+    assertThat(afterNewContactAdded, equalTo(beforeNewContactAdded.withAdded(newContact.withId(afterNewContactAdded.stream().mapToInt((c) -> c.getId()).max().getAsInt()))));
+  }
+  @Test(dataProvider = "newValidContactsFromJSON")
+  public void testNewContactWithoutPhotoJSON(ContactData newContact) throws Exception {
+    Contacts beforeNewContactAdded = app.contact().all();
+    app.goTo().addNewPage();
+    app.contact().create(newContact);
+    app.contact().returnToHomePage();
+    assertThat(app.contact().count(), equalTo(beforeNewContactAdded.size() + 1));
+    Contacts afterNewContactAdded = app.contact().all();
+    assertThat(afterNewContactAdded, equalTo(beforeNewContactAdded.withAdded(newContact.withId(afterNewContactAdded.stream().mapToInt((c) -> c.getId()).max().getAsInt()))));
+  }
   @Test(enabled = true)
   public void testNewContactWithPhoto() throws Exception {
     Contacts beforeNewContactAdded = app.contact().all();

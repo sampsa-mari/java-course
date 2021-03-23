@@ -1,7 +1,7 @@
 [
   {
-    "lastName": "JSONLastName 0",
-    "firstName": "JSONFirstName 0",
+    "lastName": "JSON-LastName 0",
+    "firstName": "JSON-FirstName 0",
     "nickName": "Rock-n-Roll",
     "companyName": "Yandex",
     "address": "Address 0",
@@ -16,8 +16,8 @@
     "yearOfBirth": "1984"
   },
   {
-    "lastName": "JSONLastName 1",
-    "firstName": "JSONFirstName 1",
+    "lastName": "JSON-LastName 1",
+    "firstName": "JSON-FirstName 1",
     "nickName": "Rock-n-Roll",
     "companyName": "Yandex",
     "address": "Address 1",

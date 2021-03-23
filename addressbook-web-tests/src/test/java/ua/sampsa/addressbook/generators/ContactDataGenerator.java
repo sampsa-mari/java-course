@@ -75,10 +75,10 @@ public class ContactDataGenerator {
     System.out.println(new File(".").getAbsolutePath());
     try (Writer writer = new FileWriter(file)) {
       for (ContactData contact : contacts) {
-        writer.write(String.format("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",
+        writer.write(String.format("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n",
                 contact.getFirstName(), contact.getLastName(), contact.getAddress(), contact.getNickName(), contact.getCompanyName(),
                 contact.getHomePhone(), contact.getMobilePhone(), contact.getWorkPhone(), contact.getEmail(), contact.getEmail2(), contact.getEmail3(),
-                contact.getDayOfBirth(), contact.getMonthOfBirth(), contact.getYearOfBirth()));
+                contact.getDayOfBirth(), contact.getMonthOfBirth(), contact.getYearOfBirth(), contact.getPhoto()));
       }
     }
   }
@@ -87,8 +87,8 @@ public class ContactDataGenerator {
     List<ContactData> contacts = new ArrayList<ContactData>();
     for (int i = 0; i < count; i++){
       contacts.add(new ContactData()
-              .withFirstName(String.format("CSVFirstName %s", i))
-              .withLastName(String.format("CSVLastName %s", i))
+              .withFirstName(String.format("JSON-FirstName %s", i))
+              .withLastName(String.format("JSON-LastName %s", i))
               .withAddress(String.format("Address %s", i))
               .withNickName(String.format("Rock-n-Roll"))
               .withCompanyName(String.format("Yandex"))
@@ -100,7 +100,8 @@ public class ContactDataGenerator {
               .withEmail3(String.format("email3@yandex.ru"))
               .withDayOfBirth(String.format("1"))
               .withMonthOfBirth(String.format("January"))
-              .withYearOfBirth(String.format("1984")));
+              .withYearOfBirth(String.format("1984"))
+              .withPhoto(new File("src/test/resources/dataFiles/Mila.png")));
     }
     return contacts;
   }

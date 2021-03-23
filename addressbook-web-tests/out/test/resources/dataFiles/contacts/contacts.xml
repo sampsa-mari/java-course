@@ -1,7 +1,7 @@
 <list>
   <contact>
-    <lastName>XMLLastName 0</lastName>
-    <firstName>XMLFirstName 0</firstName>
+    <lastName>XML-LastName 0</lastName>
+    <firstName>XML-FirstName 0</firstName>
     <nickName>Rock-n-Roll</nickName>
     <companyName>Yandex</companyName>
     <address>Address 0</address>
@@ -14,10 +14,11 @@
     <dayOfBirth>1</dayOfBirth>
     <monthOfBirth>January</monthOfBirth>
     <yearOfBirth>1984</yearOfBirth>
+    <photo>src/test/resources/dataFiles/Mila.png</photo>
   </contact>
   <contact>
-    <lastName>XMLLastName 1</lastName>
-    <firstName>XMLFirstName 1</firstName>
+    <lastName>XML-LastName 1</lastName>
+    <firstName>XML-FirstName 1</firstName>
     <nickName>Rock-n-Roll</nickName>
     <companyName>Yandex</companyName>
     <address>Address 1</address>
@@ -30,5 +31,6 @@
     <dayOfBirth>1</dayOfBirth>
     <monthOfBirth>January</monthOfBirth>
     <yearOfBirth>1984</yearOfBirth>
+    <photo>src/test/resources/dataFiles/Mila.png</photo>
   </contact>
 </list>
