@@ -290,11 +290,11 @@ public class ContactData {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     ContactData that = (ContactData) o;
-    return id == that.id && Objects.equals(lastName, that.lastName) && Objects.equals(middleName, that.middleName) && Objects.equals(firstName, that.firstName) && Objects.equals(nickName, that.nickName) && Objects.equals(group, that.group) && Objects.equals(companyName, that.companyName) && Objects.equals(address, that.address) && Objects.equals(homePhone, that.homePhone) && Objects.equals(mobilePhone, that.mobilePhone) && Objects.equals(workPhone, that.workPhone) && Objects.equals(email, that.email) && Objects.equals(email2, that.email2) && Objects.equals(email3, that.email3);
+    return id == that.id && Objects.equals(lastName, that.lastName) && Objects.equals(firstName, that.firstName) && Objects.equals(companyName, that.companyName) && Objects.equals(address, that.address) && Objects.equals(homePhone, that.homePhone) && Objects.equals(mobilePhone, that.mobilePhone) && Objects.equals(workPhone, that.workPhone) && Objects.equals(email, that.email) && Objects.equals(email2, that.email2) && Objects.equals(email3, that.email3);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, lastName, middleName, firstName, nickName, group, companyName, address, homePhone, mobilePhone, workPhone, email, email2, email3);
+    return Objects.hash(id, lastName, firstName, companyName, address, homePhone, mobilePhone, workPhone, email, email2, email3);
   }
 }
